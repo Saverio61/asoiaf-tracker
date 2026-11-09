@@ -6,31 +6,33 @@
   <title>A Song of Ice and Fire — Archivio Capitoli & Lore</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
             parchment: {
-              50: '#fdfbf7',
-              100: '#f7f2e8',
-              200: '#ede2ce',
-              300: '#dfcdad',
-              800: '#433422',
-              900: '#2b2115'
+              50: '#ffffff',
+              100: '#f9f6ef',
+              200: '#f0e8d5',
+              300: '#decfae',
+              400: '#c5b085',
+              800: '#382816',
+              900: '#1e1408'
             },
             ink: {
-              DEFAULT: '#2c2523',
-              light: '#534741',
-              muted: '#7a6b63'
+              DEFAULT: '#1a1412',
+              light: '#3e322d',
+              muted: '#5c4d44'
             },
-            westeros: {
-              gold: '#b48a3c',
-              crimson: '#8a2522',
-              ice: '#3f6782',
-              forest: '#2d5a3f'
+            entity: {
+              char: '#9e1b1b',      /* Rosso cremisi deciso */
+              place: '#0d5c8a',     /* Blu reale / ghiaccio */
+              house: '#a36200',     /* Oro ambra scuro */
+              race: '#196f3d',      /* Verde bosco scuro */
+              item: '#6a1b9a'       /* Prugna scuro */
             }
           },
           fontFamily: {
@@ -43,43 +45,66 @@
   </script>
   <style>
     body {
-      background-color: #f7f2e8;
-      color: #2c2523;
+      background-color: #f4eee1;
+      color: #1a1412;
       font-family: 'Crimson Pro', serif;
-      background-image: radial-gradient(#dfcdad 0.75px, transparent 0.75px);
-      background-size: 24px 24px;
+      background-image: radial-gradient(#d3c29e 1px, transparent 1px);
+      background-size: 20px 20px;
     }
-    .custom-scroll::-webkit-scrollbar { width: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #ede2ce; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #dfcdad; border-radius: 3px; }
+    .custom-scroll::-webkit-scrollbar { width: 7px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #f0e8d5; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #bba477; border-radius: 4px; }
+    .wiki-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: opacity 0.15s;
+    }
+    .wiki-link:hover { opacity: 0.8; }
+    .wiki-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border-width: 1px;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .wiki-badge:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.12); }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-ink selection:bg-westeros-gold selection:text-white">
+<body class="min-h-screen flex flex-col text-ink selection:bg-amber-700 selection:text-white">
 
-  <!-- Intestazione -->
-  <header class="border-b border-parchment-300 bg-parchment-50 shadow-sm sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+  <!-- Intestazione Principale -->
+  <header class="border-b-2 border-parchment-400 bg-parchment-100 shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center gap-4">
       <div class="flex items-center space-x-3">
-        <span class="text-3xl text-westeros-gold">⚔</span>
+        <span class="text-3xl text-amber-700 font-bold">🛡️</span>
         <div>
-          <h1 class="font-title text-2xl font-bold tracking-wider text-parchment-900 uppercase">A Song of Ice and Fire</h1>
-          <p class="text-xs text-ink-muted uppercase tracking-widest font-semibold">Archivio Personale di Lettura & Database di Lore</p>
+          <h1 class="font-title text-2xl font-black tracking-wider text-parchment-900 uppercase">A Song of Ice and Fire</h1>
+          <p class="text-xs text-ink-muted uppercase tracking-widest font-bold">Archivio Personale di Lettura & Lore Enciclopedica</p>
         </div>
       </div>
       
       <div class="flex items-center gap-2 flex-wrap text-sm">
-        <button id="btn-export-json" class="px-3 py-1.5 rounded border border-parchment-300 bg-parchment-100 hover:bg-parchment-200 text-ink font-medium shadow-sm transition">
+        <button id="btn-export-json" class="px-3 py-1.5 rounded border border-parchment-400 bg-white hover:bg-parchment-200 text-ink font-bold shadow-sm transition">
           📥 Backup JSON
         </button>
-        <button id="btn-export-csv" class="px-3 py-1.5 rounded border border-parchment-300 bg-parchment-100 hover:bg-parchment-200 text-ink font-medium shadow-sm transition">
+        <button id="btn-export-csv" class="px-3 py-1.5 rounded border border-parchment-400 bg-white hover:bg-parchment-200 text-ink font-bold shadow-sm transition">
           📊 Scarica CSV
         </button>
-        <label class="px-3 py-1.5 rounded border border-parchment-300 bg-parchment-100 hover:bg-parchment-200 text-ink font-medium shadow-sm transition cursor-pointer">
+        <label class="px-3 py-1.5 rounded border border-parchment-400 bg-white hover:bg-parchment-200 text-ink font-bold shadow-sm transition cursor-pointer">
           📤 Importa JSON
           <input type="file" id="input-import-json" accept=".json" class="hidden">
         </label>
-        <button id="btn-open-modal" class="px-4 py-1.5 rounded bg-westeros-crimson hover:bg-red-900 text-white font-title text-xs tracking-wider uppercase font-bold shadow transition">
-          + Nuovo Capitolo
+        <button id="btn-open-modal" class="px-4 py-1.5 rounded bg-entity-char hover:bg-red-950 text-white font-title text-xs tracking-wider uppercase font-extrabold shadow-md transition">
+          + Aggiungi Capitolo
         </button>
       </div>
     </div>
@@ -87,24 +112,24 @@
 
   <!-- Navigazione Schede & Filtri -->
   <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-parchment-300">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b-2 border-parchment-300">
       
       <!-- Schede Vista -->
       <div class="flex space-x-2">
-        <button id="tab-chapters" class="px-4 py-2 font-title text-sm tracking-wider uppercase border-b-2 border-westeros-crimson font-bold text-westeros-crimson bg-parchment-100 rounded-t">
+        <button id="tab-chapters" class="px-4 py-2 font-title text-sm tracking-wider uppercase border-b-4 border-entity-char font-black text-entity-char bg-white rounded-t shadow-sm">
           📖 Cronologia Capitoli
         </button>
-        <button id="tab-entities" class="px-4 py-2 font-title text-sm tracking-wider uppercase border-b-2 border-transparent text-ink-muted hover:text-ink hover:bg-parchment-100 rounded-t transition">
+        <button id="tab-entities" class="px-4 py-2 font-title text-sm tracking-wider uppercase border-b-4 border-transparent text-ink-muted hover:text-ink hover:bg-white/80 rounded-t transition font-bold">
           🏛️ Enciclopedia Entità
         </button>
       </div>
 
       <!-- Barra di Ricerca & Filtri -->
       <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-        <input type="text" id="filter-search" placeholder="Cerca personaggi, luoghi, note..." 
-          class="px-3 py-1.5 bg-parchment-50 border border-parchment-300 rounded text-sm w-full md:w-64 focus:outline-none focus:border-westeros-gold">
+        <input type="text" id="filter-search" placeholder="Cerca personaggi, luoghi, razze..." 
+          class="px-3 py-1.5 bg-white border-2 border-parchment-400 rounded text-sm w-full md:w-64 font-semibold focus:outline-none focus:border-amber-700 text-ink">
         
-        <select id="filter-book" class="px-3 py-1.5 bg-parchment-50 border border-parchment-300 rounded text-sm focus:outline-none focus:border-westeros-gold">
+        <select id="filter-book" class="px-3 py-1.5 bg-white border-2 border-parchment-400 rounded text-sm font-bold focus:outline-none focus:border-amber-700 text-ink">
           <option value="all">Tutti i Libri</option>
           <option value="A Game of Thrones">A Game of Thrones</option>
           <option value="A Clash of Kings">A Clash of Kings</option>
@@ -113,7 +138,7 @@
           <option value="A Dance with Dragons">A Dance with Dragons</option>
         </select>
 
-        <select id="filter-pov" class="px-3 py-1.5 bg-parchment-50 border border-parchment-300 rounded text-sm focus:outline-none focus:border-westeros-gold">
+        <select id="filter-pov" class="px-3 py-1.5 bg-white border-2 border-parchment-400 rounded text-sm font-bold focus:outline-none focus:border-amber-700 text-ink">
           <option value="all">Tutti i POV</option>
         </select>
       </div>
@@ -123,55 +148,73 @@
     <div id="view-chapters" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
       <!-- Lista Laterale Capitoli -->
-      <div class="lg:col-span-4 bg-parchment-50 border border-parchment-300 rounded-lg p-3 shadow-sm h-[calc(100vh-230px)] flex flex-col">
-        <div class="text-xs font-title tracking-wider uppercase text-ink-muted mb-2 px-2 font-bold flex justify-between">
-          <span>Capitoli Registrati</span>
-          <span id="chapter-count">0</span>
+      <div class="lg:col-span-4 bg-white border-2 border-parchment-400 rounded-lg p-3 shadow-md h-[calc(100vh-230px)] flex flex-col">
+        <div class="text-xs font-title tracking-wider uppercase text-parchment-900 mb-2 px-2 font-black flex justify-between border-b border-parchment-300 pb-2">
+          <span>Elenco Capitoli</span>
+          <span id="chapter-count" class="bg-amber-100 px-2 py-0.5 rounded text-amber-900 font-bold">0</span>
         </div>
-        <div id="chapters-list" class="space-y-2 overflow-y-auto custom-scroll flex-1 pr-1"></div>
+        <div id="chapters-list" class="space-y-2 overflow-y-auto custom-scroll flex-1 pr-1 pt-1"></div>
       </div>
 
       <!-- Dettaglio Capitolo Selezionato -->
-      <div class="lg:col-span-8 bg-parchment-50 border border-parchment-300 rounded-lg p-6 shadow-sm overflow-y-auto custom-scroll h-[calc(100vh-230px)]" id="chapter-detail">
-        <div class="text-center py-20 text-ink-muted italic">Seleziona un capitolo dall'elenco a sinistra per visualizzarne la scheda analitica.</div>
+      <div class="lg:col-span-8 bg-white border-2 border-parchment-400 rounded-lg p-6 shadow-md overflow-y-auto custom-scroll h-[calc(100vh-230px)]" id="chapter-detail">
+        <div class="text-center py-20 text-ink-muted italic font-semibold">Seleziona un capitolo dall'elenco a sinistra per visualizzarne la scheda analitica.</div>
       </div>
 
     </div>
 
     <!-- VISTA 2: ENCICLOPEDIA ENTITÀ -->
     <div id="view-entities" class="hidden space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      
+      <!-- Legenda Categorie -->
+      <div class="bg-white p-3 border-2 border-parchment-400 rounded-lg flex flex-wrap gap-4 text-xs font-bold uppercase tracking-wider justify-around">
+        <span class="text-entity-char">● Personaggi</span>
+        <span class="text-entity-place">● Luoghi & Città</span>
+        <span class="text-entity-house">● Casate Nobili</span>
+        <span class="text-entity-race">● Popoli & Razze</span>
+        <span class="text-entity-item">● Termini & Oggetti</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         
-        <div class="bg-parchment-50 p-4 border border-parchment-300 rounded-lg shadow-sm">
-          <h3 class="font-title text-sm tracking-wider uppercase font-bold text-westeros-crimson mb-3 flex items-center justify-between">
+        <div class="bg-white p-4 border-2 border-parchment-400 rounded-lg shadow-sm">
+          <h3 class="font-title text-sm tracking-wider uppercase font-black text-entity-char mb-3 flex items-center justify-between border-b border-parchment-200 pb-1">
             <span>Personaggi</span>
-            <span id="count-chars" class="text-xs bg-parchment-200 px-2 py-0.5 rounded text-ink font-sans">0</span>
+            <span id="count-chars" class="text-xs bg-red-100 text-red-900 px-2 py-0.5 rounded font-sans font-bold">0</span>
           </h3>
-          <div id="entities-chars" class="space-y-2 max-h-96 overflow-y-auto custom-scroll text-sm"></div>
+          <div id="entities-chars" class="space-y-2 max-h-[500px] overflow-y-auto custom-scroll text-sm"></div>
         </div>
 
-        <div class="bg-parchment-50 p-4 border border-parchment-300 rounded-lg shadow-sm">
-          <h3 class="font-title text-sm tracking-wider uppercase font-bold text-westeros-gold mb-3 flex items-center justify-between">
+        <div class="bg-white p-4 border-2 border-parchment-400 rounded-lg shadow-sm">
+          <h3 class="font-title text-sm tracking-wider uppercase font-black text-entity-place mb-3 flex items-center justify-between border-b border-parchment-200 pb-1">
+            <span>Luoghi & Città</span>
+            <span id="count-places" class="text-xs bg-blue-100 text-blue-900 px-2 py-0.5 rounded font-sans font-bold">0</span>
+          </h3>
+          <div id="entities-places" class="space-y-2 max-h-[500px] overflow-y-auto custom-scroll text-sm"></div>
+        </div>
+
+        <div class="bg-white p-4 border-2 border-parchment-400 rounded-lg shadow-sm">
+          <h3 class="font-title text-sm tracking-wider uppercase font-black text-entity-house mb-3 flex items-center justify-between border-b border-parchment-200 pb-1">
             <span>Casate Nobili</span>
-            <span id="count-houses" class="text-xs bg-parchment-200 px-2 py-0.5 rounded text-ink font-sans">0</span>
+            <span id="count-houses" class="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-sans font-bold">0</span>
           </h3>
-          <div id="entities-houses" class="space-y-2 max-h-96 overflow-y-auto custom-scroll text-sm"></div>
+          <div id="entities-houses" class="space-y-2 max-h-[500px] overflow-y-auto custom-scroll text-sm"></div>
         </div>
 
-        <div class="bg-parchment-50 p-4 border border-parchment-300 rounded-lg shadow-sm">
-          <h3 class="font-title text-sm tracking-wider uppercase font-bold text-westeros-ice mb-3 flex items-center justify-between">
-            <span>Luoghi & Geografia</span>
-            <span id="count-places" class="text-xs bg-parchment-200 px-2 py-0.5 rounded text-ink font-sans">0</span>
+        <div class="bg-white p-4 border-2 border-parchment-400 rounded-lg shadow-sm">
+          <h3 class="font-title text-sm tracking-wider uppercase font-black text-entity-race mb-3 flex items-center justify-between border-b border-parchment-200 pb-1">
+            <span>Popoli & Razze</span>
+            <span id="count-races" class="text-xs bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded font-sans font-bold">0</span>
           </h3>
-          <div id="entities-places" class="space-y-2 max-h-96 overflow-y-auto custom-scroll text-sm"></div>
+          <div id="entities-races" class="space-y-2 max-h-[500px] overflow-y-auto custom-scroll text-sm"></div>
         </div>
 
-        <div class="bg-parchment-50 p-4 border border-parchment-300 rounded-lg shadow-sm">
-          <h3 class="font-title text-sm tracking-wider uppercase font-bold text-westeros-forest mb-3 flex items-center justify-between">
+        <div class="bg-white p-4 border-2 border-parchment-400 rounded-lg shadow-sm">
+          <h3 class="font-title text-sm tracking-wider uppercase font-black text-entity-item mb-3 flex items-center justify-between border-b border-parchment-200 pb-1">
             <span>Termini & Oggetti</span>
-            <span id="count-terms" class="text-xs bg-parchment-200 px-2 py-0.5 rounded text-ink font-sans">0</span>
+            <span id="count-terms" class="text-xs bg-purple-100 text-purple-900 px-2 py-0.5 rounded font-sans font-bold">0</span>
           </h3>
-          <div id="entities-terms" class="space-y-2 max-h-96 overflow-y-auto custom-scroll text-sm"></div>
+          <div id="entities-terms" class="space-y-2 max-h-[500px] overflow-y-auto custom-scroll text-sm"></div>
         </div>
 
       </div>
@@ -179,22 +222,22 @@
   </main>
 
   <!-- Modale Aggiungi Capitolo -->
-  <div id="modal-new-chapter" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-parchment-50 border border-parchment-300 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
-      <div class="p-4 border-b border-parchment-300 flex justify-between items-center bg-parchment-100">
-        <h3 class="font-title text-lg font-bold text-parchment-900 uppercase">Aggiungi Nuovo Capitolo</h3>
-        <button id="btn-close-modal" class="text-ink-muted hover:text-ink text-xl font-bold">&times;</button>
+  <div id="modal-new-chapter" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border-2 border-parchment-400 rounded-lg shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div class="p-4 border-b-2 border-parchment-300 flex justify-between items-center bg-parchment-100">
+        <h3 class="font-title text-lg font-black text-parchment-900 uppercase">Aggiungi Nuovo Capitolo al Database</h3>
+        <button id="btn-close-modal" class="text-ink-muted hover:text-ink text-2xl font-bold">&times;</button>
       </div>
 
-      <form id="form-chapter" class="p-6 overflow-y-auto custom-scroll space-y-4 text-sm">
+      <form id="form-chapter" class="p-6 overflow-y-auto custom-scroll space-y-4 text-sm font-semibold">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs uppercase font-bold tracking-wider mb-1">Titolo Capitolo</label>
-            <input type="text" id="inp-title" required placeholder="es. Bran I" class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+            <label class="block text-xs uppercase font-extrabold tracking-wider mb-1">Titolo Capitolo</label>
+            <input type="text" id="inp-title" required placeholder="es. Bran I" class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
           </div>
           <div>
-            <label class="block text-xs uppercase font-bold tracking-wider mb-1">Libro</label>
-            <select id="inp-book" class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+            <label class="block text-xs uppercase font-extrabold tracking-wider mb-1">Libro</label>
+            <select id="inp-book" class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
               <option value="A Game of Thrones">A Game of Thrones</option>
               <option value="A Clash of Kings">A Clash of Kings</option>
               <option value="A Storm of Swords">A Storm of Swords</option>
@@ -203,60 +246,86 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs uppercase font-bold tracking-wider mb-1">Punto di Vista (P.O.V.)</label>
-            <input type="text" id="inp-pov" required placeholder="es. Bran, Catelyn, Jon" class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+            <label class="block text-xs uppercase font-extrabold tracking-wider mb-1">Punto di Vista (P.O.V.)</label>
+            <input type="text" id="inp-pov" required placeholder="es. Bran" class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
           </div>
           <div>
-            <label class="block text-xs uppercase font-bold tracking-wider mb-1">Luogo Principale</label>
-            <input type="text" id="inp-place" required placeholder="es. Grande Inverno, Bosco Stregato" class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+            <label class="block text-xs uppercase font-extrabold tracking-wider mb-1">Luogo Principale</label>
+            <input type="text" id="inp-place" required placeholder="es. Grande Inverno" class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs uppercase font-bold tracking-wider mb-1">Sinossi Dettagliata</label>
-          <textarea id="inp-synopsis" rows="4" required class="w-full px-3 py-2 bg-white border border-parchment-300 rounded"></textarea>
+          <label class="block text-xs uppercase font-extrabold tracking-wider mb-1">Sinossi Narrativa</label>
+          <textarea id="inp-synopsis" rows="4" required class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded"></textarea>
         </div>
 
         <div class="border-t border-parchment-300 pt-3">
-          <p class="text-xs text-ink-muted italic mb-3">Inserisci gli elementi separati da virgola</p>
+          <p class="text-xs text-ink-muted italic mb-3">Separa i valori con una virgola. I link alla Wiki verranno generati automaticamente!</p>
           <div class="space-y-3">
             <div>
-              <label class="block text-xs uppercase font-bold tracking-wider mb-1">Personaggi Presenti</label>
-              <input type="text" id="inp-chars" placeholder="Bran Stark, Eddard Stark, Robb Stark..." class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+              <label class="block text-xs uppercase font-extrabold tracking-wider mb-1 text-entity-char">Personaggi Presenti</label>
+              <input type="text" id="inp-chars" placeholder="Bran Stark, Eddard Stark, Robb Stark..." class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
             </div>
             <div>
-              <label class="block text-xs uppercase font-bold tracking-wider mb-1">Personaggi Menzionati</label>
-              <input type="text" id="inp-mentioned" placeholder="Re Robert, Mance Rayder..." class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+              <label class="block text-xs uppercase font-extrabold tracking-wider mb-1 text-entity-char">Personaggi Menzionati</label>
+              <input type="text" id="inp-mentioned" placeholder="Re Robert Baratheon, Mance Rayder..." class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
             </div>
             <div>
-              <label class="block text-xs uppercase font-bold tracking-wider mb-1">Casate Coinvolte</label>
-              <input type="text" id="inp-houses" placeholder="Casa Stark, Casa Baratheon..." class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+              <label class="block text-xs uppercase font-extrabold tracking-wider mb-1 text-entity-place">Luoghi & Città</label>
+              <input type="text" id="inp-places-list" placeholder="Grande Inverno, La Barriera, Approdo del Re..." class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
             </div>
             <div>
-              <label class="block text-xs uppercase font-bold tracking-wider mb-1">Luoghi Citati</label>
-              <input type="text" id="inp-places-list" placeholder="La Barriera, Grande Inverno..." class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+              <label class="block text-xs uppercase font-extrabold tracking-wider mb-1 text-entity-house">Casate Nobili</label>
+              <input type="text" id="inp-houses" placeholder="Casa Stark, Casa Baratheon, Casa Lannister..." class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
             </div>
             <div>
-              <label class="block text-xs uppercase font-bold tracking-wider mb-1">Termini & Oggetti Chiave</label>
-              <input type="text" id="inp-terms" placeholder="Metalupo, Ghiaccio (spada), Valyrian steel..." class="w-full px-3 py-2 bg-white border border-parchment-300 rounded">
+              <label class="block text-xs uppercase font-extrabold tracking-wider mb-1 text-entity-race">Popoli, Razze & Fazioni</label>
+              <input type="text" id="inp-races" placeholder="Primi Uomini, Guardiani della Notte, Popolo Libero..." class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
             </div>
             <div>
-              <label class="block text-xs uppercase font-bold tracking-wider mb-1">Note, Foreshadowing & Teorie</label>
-              <textarea id="inp-notes" rows="2" class="w-full px-3 py-2 bg-white border border-parchment-300 rounded"></textarea>
+              <label class="block text-xs uppercase font-extrabold tracking-wider mb-1 text-entity-item">Termini & Oggetti Iconici</label>
+              <input type="text" id="inp-terms" placeholder="Metalupo, Ghiaccio (spada), Acciaio di Valyria..." class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded">
+            </div>
+            <div>
+              <label class="block text-xs uppercase font-extrabold tracking-wider mb-1">Note, Foreshadowing & Teorie</label>
+              <textarea id="inp-notes" rows="2" class="w-full px-3 py-2 bg-parchment-50 border border-parchment-400 rounded"></textarea>
             </div>
           </div>
         </div>
 
         <div class="pt-4 border-t border-parchment-300 flex justify-end gap-3">
-          <button type="button" id="btn-cancel-modal" class="px-4 py-2 border border-parchment-300 rounded text-ink hover:bg-parchment-200">Annulla</button>
-          <button type="submit" class="px-5 py-2 bg-westeros-crimson text-white rounded font-bold hover:bg-red-900">Salva Capitolo</button>
+          <button type="button" id="btn-cancel-modal" class="px-4 py-2 border border-parchment-400 rounded text-ink hover:bg-parchment-200 font-bold">Annulla</button>
+          <button type="submit" class="px-5 py-2 bg-entity-char text-white rounded font-extrabold hover:bg-red-950">Salva Capitolo</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // Dati canonici iniziali
+    // Generatore link a A Wiki of Ice and Fire
+    function getWikiUrl(entityName) {
+      const clean = entityName.split('(')[0].trim().replace(/\s+/g, '_');
+      return `https://awoiaf.westeros.org/index.php/${encodeURIComponent(clean)}`;
+    }
+
+    // Helper per Badge con Link
+    function makeBadge(name, type) {
+      const url = getWikiUrl(name);
+      let colorClasses = '';
+      if (type === 'char')  colorClasses = 'bg-red-50 border-red-300 text-entity-char hover:bg-red-100';
+      if (type === 'place') colorClasses = 'bg-blue-50 border-blue-300 text-entity-place hover:bg-blue-100';
+      if (type === 'house') colorClasses = 'bg-amber-50 border-amber-300 text-entity-house hover:bg-amber-100';
+      if (type === 'race')  colorClasses = 'bg-emerald-50 border-emerald-300 text-entity-race hover:bg-emerald-100';
+      if (type === 'item')  colorClasses = 'bg-purple-50 border-purple-300 text-entity-item hover:bg-purple-100';
+
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="wiki-badge ${colorClasses}" title="Apri scheda su A Wiki of Ice and Fire">
+        <span>${name}</span>
+        <span class="text-[10px] opacity-60">↗</span>
+      </a>`;
+    }
+
+    // Dati Canonici del Prologo
     const INITIAL_CHAPTERS = [
       {
         id: "agot-prologue",
@@ -265,30 +334,30 @@
         pov: "Will",
         place: "Oltre la Barriera (Bosco Stregato)",
         chronology: "Prologo → Bran I (Fine 297 CA)",
-        synopsis: "Tre ricognitori dei Guardiani della Notte — Ser Waymar Royce, Will e il veterano Gared — sono sulle tracce di un gruppo di razziatori bruti nel Bosco Stregato, a circa 9 giorni di marcia a nord della Barriera. Will ha individuato l'accampamento nemico e riferisce che gli otto bruti (compresa una donna su un albero) giacciono immobili nella neve senza tracce di sangue. Gared insiste per fare rotta verso la Barriera paventando l'arrivo della bufera, ma Royce, diciottenne nobile alla sua prima ricognizione, ordina di raggiungere il campo per accertarsene di persona.\\n\\nLasciato Gared a guardia dei cavalli con l'ordine di non accendere fuochi, Will e Royce salgono sul crinale: i cadaveri sono svaniti. Su ordine di Royce, Will sale su un albero sentinella in cerca di fumo. Improvvisamente la temperatura crolla e dalla boscaglia emerge un Estraneo: un essere alto, emaciato, dalla pelle lattea, con occhi di un azzurro glaciale e una spada di cristallo traslucido letale. Royce affronta il duello valorosamente («Dance with me then»), ma quando la sua lama d'acciaio umano tocca quella di cristallo, si frantuma. Accecato e ferito, Royce viene trucidato dagli Estranei.\\n\\nCessato il massacro, Will scende dall'albero per recuperare la spada spezzata di Royce come prova. Quando si rialza, il cadavere di Waymar si è ridestato con occhi blu zaffiro e lo strangola.",
+        synopsis: "Tre ranger dei Guardiani della Notte — Ser Waymar Royce, Will e il veterano Gared — sono sulle tracce di un gruppo di razziatori bruti nel Bosco Stregato, a circa 9 giorni di marcia a nord della Barriera. Will individua il loro accampamento: non ci sono fuochi e gli otto bruti (compresa una donna su un albero) giacciono immobili nella neve senza tracce di sangue. Gared insiste per tornare alla Barriera temendo una tempesta e il freddo soprannaturale, ma Royce, diciottenne aristocratico alla sua prima spedizione, ordina di avanzare.\\n\\nLasciato Gared a guardia dei cavalli senza fuoco, Will e Royce risalgono il costone: i cadaveri sono svaniti nel nulla. Su ordine di Royce, Will sale su un albero sentinella. La temperatura crolla all'improvviso e dalla foresta emerge un Estraneo: un essere alto, scarno, dalla pelle bianca come il latte e dotato di un'arma di cristallo traslucido. Royce affronta il duello con fierezza («Dance with me then»), ma quando la sua lama d'acciaio umano incrocia quella dell'Estraneo, si spezza in mille frammenti. Royce viene massacrato dagli Estranei sopraggiunti.\\n\\nCessata la strage, Will scende dall'albero per recuperare la spada spezzata come prova per i comandanti; quando si alza, il cadavere di Waymar si ridesta con occhi blu zaffiro e lo strangola con mani gelide.",
         characters: [
-          { name: "Will", role: "POV. Ex bracconiere di Mallister, ranger da 4 anni.", status: "Deceduto (strangolato da Waymar risorto)" },
-          { name: "Ser Waymar Royce", role: "Terzo figlio di Lord Yohn Royce. Cavaliere nobile, 18 anni.", status: "Deceduto e rianimato come Non-Morto (Wight)" },
-          { name: "Gared", role: "Veterano da 40 anni nei Guardiani. Cauto, privo delle orecchie per congelamento.", status: "Sopravvissuto (in fuga verso sud)" },
-          { name: "Gli Estranei (The Others)", role: "Antiche creature leggendarie di ghiaccio, armature cangianti e spade di cristallo.", status: "Attivi" }
+          { name: "Will", role: "POV del capitolo. Ex bracconiere di Mallister, ranger silenzioso da 4 anni.", status: "Deceduto (strangolato da Waymar risorto)" },
+          { name: "Ser Waymar Royce", role: "Terzo figlio di Lord Yohn Royce. Cavaliere nobile, 18 anni.", status: "Ucciso dagli Estranei e risorto come Non-Morto (Wight)" },
+          { name: "Gared", role: "Veterano con 40 anni di servizio. Mutilato dal gelo alle orecchie e dita.", status: "Sopravvissuto (in fuga verso sud)" }
         ],
         mentioned: ["Aemon (Maestro di Castello Nero)", "Re Robert I Baratheon", "Jeor Mormont (Lord Comandante)"],
-        houses: ["Casa Royce (Valle di Arryn / Runestone)", "Casa Mallister (Terre dei Fiumi / Seagard)"],
-        places: ["Oltre la Barriera (Beyond the Wall)", "Bosco Stregato (Haunted forest)", "Castello Nero (Castle Black)", "La Barriera (The Wall)", "Westeros"],
-        terms: ["Guardiani della Notte (Night's Watch)", "Bruti / Popolo Libero (Wildlings)", "Non-Morti (Wights)", "Albero Sentinella (Sentinel)", "Legnoferro (Ironwood)", "Spade di Cristallo", "Southron", "Sworn Brother"],
-        notes: "1. STRUTTURA NARRATIVA: Martin apre la saga con l'orrore cosmico degli Estranei prima di qualsiasi trama politica a Approdo del Re.\\n2. RACCORDO CON BRAN I: Gared scappa a sud in preda al panico e sarà decapitato da Eddard Stark come disertore all'inizio del prossimo capitolo.\\n3. ACCIAIO VS CRISTALLO: L'acciaio ordinario non resiste al gelo molecolare delle spade degli Estranei e si frantuma al contatto."
+        places: ["Oltre la Barriera (Beyond the Wall)", "Bosco Stregato (Haunted Forest)", "Castello Nero (Castle Black)", "La Barriera (The Wall)", "Westeros"],
+        houses: ["Casa Royce (Runestone)", "Casa Mallister (Seagard)"],
+        races: ["Gli Estranei (The Others)", "Guardiani della Notte (Night's Watch)", "Bruti / Popolo Libero (Wildlings)", "Non-Morti (Wights)"],
+        terms: ["Spade di Cristallo (Crystal Swords)", "Albero Sentinella (Sentinel tree)", "Legnoferro (Ironwood)", "Southron", "Confratello Giurato (Sworn Brother)"],
+        notes: "1. STRUTTURA NARRATIVA: Martin apre la saga con l'orrore cosmico degli Estranei prima di introdurre le guerre dinastiche umane.\\n2. RACCORDO CON BRAN I: Gared fugge verso sud sconvolto dal terrore; la sua decapitazione per diserzione da parte di Eddard Stark aprirà il capitolo Bran I.\\n3. ACCIAIO VS GHIACCIO: L'acciaio ordinario non sopporta il gelo delle armi degli Estranei e si scheggia istantaneamente."
       }
     ];
 
-    // Stato applicazione
-    let chapters = JSON.parse(localStorage.getItem('asoiaf_db_chapters')) || INITIAL_CHAPTERS;
+    // Stato
+    let chapters = JSON.parse(localStorage.getItem('asoiaf_db_chapters_v2')) || INITIAL_CHAPTERS;
     let selectedChapterId = chapters[0]?.id || null;
 
     function saveState() {
-      localStorage.setItem('asoiaf_db_chapters', JSON.stringify(chapters));
+      localStorage.setItem('asoiaf_db_chapters_v2', JSON.stringify(chapters));
     }
 
-    // Render Capitoli
+    // Render Lista Capitoli
     function renderChaptersList() {
       const container = document.getElementById('chapters-list');
       const bookFilter = document.getElementById('filter-book').value;
@@ -310,25 +379,25 @@
       container.innerHTML = '';
 
       if (filtered.length === 0) {
-        container.innerHTML = '<p class="text-sm text-ink-muted italic p-2">Nessun capitolo trovato.</p>';
+        container.innerHTML = '<p class="text-sm text-ink-muted italic p-2 font-semibold">Nessun capitolo trovato.</p>';
         return;
       }
 
       filtered.forEach(c => {
         const isSelected = (c.id === selectedChapterId);
         const card = document.createElement('div');
-        card.className = `p-3 rounded border transition cursor-pointer ${
+        card.className = `p-3 rounded-lg border-2 transition cursor-pointer ${
           isSelected 
-            ? 'bg-parchment-200 border-westeros-gold shadow-sm' 
-            : 'bg-parchment-100 hover:bg-parchment-200 border-parchment-300'
+            ? 'bg-amber-50 border-amber-600 shadow-md' 
+            : 'bg-white hover:bg-parchment-100 border-parchment-300'
         }`;
         card.innerHTML = `
           <div class="flex justify-between items-start mb-1">
-            <h4 class="font-title font-bold text-sm text-parchment-900">${c.title}</h4>
-            <span class="text-xs px-1.5 py-0.5 rounded bg-parchment-300/60 font-sans font-medium text-ink">${c.pov}</span>
+            <h4 class="font-title font-black text-sm text-parchment-900">${c.title}</h4>
+            <span class="text-xs px-2 py-0.5 rounded bg-red-100 font-bold text-entity-char">${c.pov}</span>
           </div>
-          <p class="text-xs text-ink-muted line-clamp-1 italic">${c.place}</p>
-          <p class="text-[11px] text-ink-light font-sans mt-1 uppercase tracking-wider">${c.book}</p>
+          <p class="text-xs text-entity-place line-clamp-1 font-bold">${c.place}</p>
+          <p class="text-[11px] text-ink-muted font-sans mt-1 uppercase tracking-wider font-extrabold">${c.book}</p>
         `;
         card.onclick = () => {
           selectedChapterId = c.id;
@@ -345,49 +414,55 @@
       const c = chapters.find(item => item.id === selectedChapterId);
 
       if (!c) {
-        container.innerHTML = '<div class="text-center py-20 text-ink-muted italic">Seleziona un capitolo.</div>';
+        container.innerHTML = '<div class="text-center py-20 text-ink-muted italic font-bold">Seleziona un capitolo.</div>';
         return;
       }
 
       container.innerHTML = `
         <div class="space-y-6">
-          <div class="border-b border-parchment-300 pb-4">
+          <div class="border-b-2 border-parchment-300 pb-4">
             <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
-              <span class="text-xs font-title tracking-widest uppercase text-westeros-crimson font-bold">${c.book}</span>
-              <span class="text-xs bg-parchment-200 border border-parchment-300 px-2 py-1 rounded text-ink">Cronologia: ${c.chronology || 'N/A'}</span>
+              <span class="text-xs font-title tracking-widest uppercase text-entity-char font-black">${c.book}</span>
+              <span class="text-xs bg-parchment-200 border border-parchment-400 px-2.5 py-1 rounded font-bold text-ink">Cronologia: ${c.chronology || 'In sequenza'}</span>
             </div>
-            <h2 class="font-title text-3xl font-bold text-parchment-900">${c.title}</h2>
-            <div class="flex flex-wrap gap-4 mt-2 text-sm text-ink-muted">
-              <span><strong>Punto di Vista (P.O.V.):</strong> <span class="text-ink">${c.pov}</span></span>
+            <h2 class="font-title text-3xl font-black text-parchment-900">${c.title}</h2>
+            <div class="flex flex-wrap gap-4 mt-2 text-sm font-semibold">
+              <span><strong>Punto di Vista (P.O.V.):</strong> <span class="text-entity-char font-bold">${c.pov}</span></span>
               <span>•</span>
-              <span><strong>Luogo:</strong> <span class="text-ink">${c.place}</span></span>
+              <span><strong>Luogo:</strong> <a href="${getWikiUrl(c.place)}" target="_blank" class="text-entity-place font-bold underline hover:opacity-80">${c.place} ↗</a></span>
             </div>
           </div>
 
+          <!-- Sinossi Narrativa -->
           <div>
-            <h4 class="font-title text-sm tracking-wider uppercase font-bold text-westeros-crimson mb-2">Sinossi Funzionale</h4>
-            <div class="text-base leading-relaxed bg-parchment-100/60 p-4 rounded border border-parchment-300 space-y-3">
+            <h4 class="font-title text-sm tracking-wider uppercase font-black text-entity-char mb-2">Sinossi Funzionale</h4>
+            <div class="text-base leading-relaxed bg-parchment-100 p-4 rounded-lg border border-parchment-300 space-y-3 font-normal text-ink">
               ${c.synopsis.split('\\n\\n').map(p => `<p>${p}</p>`).join('')}
             </div>
           </div>
 
+          <!-- Tabella Personaggi Presenti -->
           <div>
-            <h4 class="font-title text-sm tracking-wider uppercase font-bold text-westeros-crimson mb-3">Personaggi Presenti (${c.characters.length})</h4>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-sm border-collapse border border-parchment-300">
+            <h4 class="font-title text-sm tracking-wider uppercase font-black text-entity-char mb-3">Personaggi Presenti (${c.characters.length})</h4>
+            <div class="overflow-x-auto rounded-lg border-2 border-parchment-300 shadow-sm">
+              <table class="w-full text-left text-sm border-collapse bg-white">
                 <thead>
-                  <tr class="bg-parchment-200 text-parchment-900 font-title text-xs tracking-wider uppercase">
-                    <th class="p-2 border border-parchment-300">Nome</th>
-                    <th class="p-2 border border-parchment-300">Ruolo / Profilo</th>
-                    <th class="p-2 border border-parchment-300">Stato</th>
+                  <tr class="bg-parchment-200 text-parchment-900 font-title text-xs tracking-wider uppercase font-black">
+                    <th class="p-2.5 border-b-2 border-parchment-300">Nome (con Link Wiki)</th>
+                    <th class="p-2.5 border-b-2 border-parchment-300">Ruolo / Profilo</th>
+                    <th class="p-2.5 border-b-2 border-parchment-300">Stato</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-parchment-300">
+                <tbody class="divide-y divide-parchment-200">
                   ${c.characters.map(ch => `
-                    <tr class="hover:bg-parchment-100">
-                      <td class="p-2 font-bold border border-parchment-300">${ch.name}</td>
-                      <td class="p-2 border border-parchment-300">${ch.role}</td>
-                      <td class="p-2 border border-parchment-300 italic text-ink-muted">${ch.status}</td>
+                    <tr class="hover:bg-amber-50/60 transition">
+                      <td class="p-2.5 font-bold text-entity-char">
+                        <a href="${getWikiUrl(ch.name)}" target="_blank" class="wiki-link text-entity-char">
+                          ${ch.name} <span class="text-[11px]">↗</span>
+                        </a>
+                      </td>
+                      <td class="p-2.5 font-medium">${ch.role}</td>
+                      <td class="p-2.5 italic font-bold text-ink-muted">${ch.status}</td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -395,49 +470,59 @@
             </div>
           </div>
 
+          <!-- Griglia Entità con Badge Cromatici e Link -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-parchment-100/70 p-3 rounded border border-parchment-300">
-              <h5 class="font-title text-xs uppercase font-bold text-westeros-gold mb-2">Personaggi Menzionati</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${c.mentioned.map(m => `<span class="bg-parchment-200 border border-parchment-300 px-2 py-0.5 rounded text-xs">${m}</span>`).join('')}
+            
+            <div class="bg-white p-3.5 rounded-lg border-2 border-parchment-300 shadow-sm">
+              <h5 class="font-title text-xs uppercase font-black text-entity-char mb-2.5">Personaggi Menzionati</h5>
+              <div class="flex flex-wrap gap-2">
+                ${c.mentioned.map(m => makeBadge(m, 'char')).join('')}
               </div>
             </div>
 
-            <div class="bg-parchment-100/70 p-3 rounded border border-parchment-300">
-              <h5 class="font-title text-xs uppercase font-bold text-westeros-gold mb-2">Casate Coinvolte</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${c.houses.map(h => `<span class="bg-parchment-200 border border-parchment-300 px-2 py-0.5 rounded text-xs">${h}</span>`).join('')}
+            <div class="bg-white p-3.5 rounded-lg border-2 border-parchment-300 shadow-sm">
+              <h5 class="font-title text-xs uppercase font-black text-entity-place mb-2.5">Luoghi & Città Citati</h5>
+              <div class="flex flex-wrap gap-2">
+                ${c.places.map(p => makeBadge(p, 'place')).join('')}
               </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-lg border-2 border-parchment-300 shadow-sm">
+              <h5 class="font-title text-xs uppercase font-black text-entity-house mb-2.5">Casate Nobili</h5>
+              <div class="flex flex-wrap gap-2">
+                ${c.houses.map(h => makeBadge(h, 'house')).join('')}
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-lg border-2 border-parchment-300 shadow-sm">
+              <h5 class="font-title text-xs uppercase font-black text-entity-race mb-2.5">Popoli, Razze & Fazioni</h5>
+              <div class="flex flex-wrap gap-2">
+                ${(c.races || []).map(r => makeBadge(r, 'race')).join('')}
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Termini & Oggetti -->
+          <div class="bg-white p-3.5 rounded-lg border-2 border-parchment-300 shadow-sm">
+            <h5 class="font-title text-xs uppercase font-black text-entity-item mb-2.5">Termini, Oggetti & Concetti di Lore</h5>
+            <div class="flex flex-wrap gap-2">
+              ${c.terms.map(t => makeBadge(t, 'item')).join('')}
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-parchment-100/70 p-3 rounded border border-parchment-300">
-              <h5 class="font-title text-xs uppercase font-bold text-westeros-ice mb-2">Geografia & Luoghi</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${c.places.map(p => `<span class="bg-parchment-200 border border-parchment-300 px-2 py-0.5 rounded text-xs">${p}</span>`).join('')}
-              </div>
-            </div>
-
-            <div class="bg-parchment-100/70 p-3 rounded border border-parchment-300">
-              <h5 class="font-title text-xs uppercase font-bold text-westeros-forest mb-2">Termini, Oggetti & Concetti</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${c.terms.map(t => `<span class="bg-parchment-200 border border-parchment-300 px-2 py-0.5 rounded text-xs">${t}</span>`).join('')}
-              </div>
-            </div>
-          </div>
-
+          <!-- Note Critiche & Presagi -->
           ${c.notes ? `
             <div>
-              <h4 class="font-title text-sm tracking-wider uppercase font-bold text-westeros-crimson mb-2">Note Critiche & Presagi</h4>
-              <div class="text-sm bg-parchment-200/50 p-4 rounded border border-parchment-300 space-y-2 italic">
+              <h4 class="font-title text-sm tracking-wider uppercase font-black text-entity-char mb-2">Note Critiche & Presagi (Foreshadowing)</h4>
+              <div class="text-sm bg-amber-50/70 p-4 rounded-lg border-2 border-amber-200 space-y-2 font-medium text-ink">
                 ${c.notes.split('\\n').map(n => `<p>${n}</p>`).join('')}
               </div>
             </div>
           ` : ''}
 
           <div class="pt-4 border-t border-parchment-300 flex justify-end">
-            <button onclick="deleteChapter('${c.id}')" class="text-xs text-red-700 hover:underline">Elimina questo capitolo</button>
+            <button onclick="deleteChapter('${c.id}')" class="text-xs text-red-700 hover:underline font-bold">Elimina questo capitolo</button>
           </div>
         </div>
       `;
@@ -446,8 +531,9 @@
     // Render Enciclopedia Entità
     function renderEntities() {
       const chars = new Map();
-      const houses = new Set();
       const places = new Set();
+      const houses = new Set();
+      const races = new Set();
       const terms = new Set();
 
       chapters.forEach(c => {
@@ -455,36 +541,64 @@
           if (!chars.has(ch.name)) chars.set(ch.name, { role: ch.role, status: ch.status, chapters: [] });
           chars.get(ch.name).chapters.push(c.title);
         });
-        c.houses.forEach(h => houses.add(h));
-        c.places.forEach(p => places.add(p));
-        c.terms.forEach(t => terms.add(t));
+        (c.places || []).forEach(p => places.add(p));
+        (c.houses || []).forEach(h => houses.add(h));
+        (c.races || []).forEach(r => races.add(r));
+        (c.terms || []).forEach(t => terms.add(t));
       });
 
       document.getElementById('count-chars').textContent = chars.size;
-      document.getElementById('count-houses').textContent = houses.size;
       document.getElementById('count-places').textContent = places.size;
+      document.getElementById('count-houses').textContent = houses.size;
+      document.getElementById('count-races').textContent = races.size;
       document.getElementById('count-terms').textContent = terms.size;
 
-      const containerChars = document.getElementById('entities-chars');
-      containerChars.innerHTML = Array.from(chars.entries()).map(([name, data]) => `
-        <div class="p-2 rounded bg-parchment-100 border border-parchment-300">
-          <div class="font-bold text-ink">${name}</div>
-          <div class="text-xs text-ink-muted">${data.role}</div>
-          <div class="text-[11px] text-westeros-crimson italic mt-1">${data.status}</div>
-          <div class="text-[10px] text-ink-light mt-1">Capitoli: ${data.chapters.join(', ')}</div>
+      // Personaggi
+      document.getElementById('entities-chars').innerHTML = Array.from(chars.entries()).map(([name, data]) => `
+        <div class="p-2.5 rounded-lg bg-red-50/50 border border-red-200">
+          <a href="${getWikiUrl(name)}" target="_blank" class="wiki-link text-entity-char text-sm">
+            ${name} <span>↗</span>
+          </a>
+          <div class="text-xs text-ink-muted mt-0.5">${data.role}</div>
+          <div class="text-[11px] text-red-800 font-bold italic mt-1">${data.status}</div>
+          <div class="text-[10px] text-ink-muted mt-1 font-semibold">Capitoli: ${data.chapters.join(', ')}</div>
         </div>
       `).join('');
 
-      document.getElementById('entities-houses').innerHTML = Array.from(houses).map(h => `
-        <div class="p-2 rounded bg-parchment-100 border border-parchment-300 font-medium">${h}</div>
-      `).join('');
-
+      // Luoghi
       document.getElementById('entities-places').innerHTML = Array.from(places).map(p => `
-        <div class="p-2 rounded bg-parchment-100 border border-parchment-300 font-medium">${p}</div>
+        <div class="p-2 rounded bg-blue-50/50 border border-blue-200">
+          <a href="${getWikiUrl(p)}" target="_blank" class="wiki-link text-entity-place text-xs font-bold">
+            ${p} <span>↗</span>
+          </a>
+        </div>
       `).join('');
 
+      // Casate
+      document.getElementById('entities-houses').innerHTML = Array.from(houses).map(h => `
+        <div class="p-2 rounded bg-amber-50/50 border border-amber-200">
+          <a href="${getWikiUrl(h)}" target="_blank" class="wiki-link text-entity-house text-xs font-bold">
+            ${h} <span>↗</span>
+          </a>
+        </div>
+      `).join('');
+
+      // Razze
+      document.getElementById('entities-races').innerHTML = Array.from(races).map(r => `
+        <div class="p-2 rounded bg-emerald-50/50 border border-emerald-200">
+          <a href="${getWikiUrl(r)}" target="_blank" class="wiki-link text-entity-race text-xs font-bold">
+            ${r} <span>↗</span>
+          </a>
+        </div>
+      `).join('');
+
+      // Termini
       document.getElementById('entities-terms').innerHTML = Array.from(terms).map(t => `
-        <div class="p-2 rounded bg-parchment-100 border border-parchment-300 font-medium">${t}</div>
+        <div class="p-2 rounded bg-purple-50/50 border border-purple-200">
+          <a href="${getWikiUrl(t)}" target="_blank" class="wiki-link text-entity-item text-xs font-bold">
+            ${t} <span>↗</span>
+          </a>
+        </div>
       `).join('');
     }
 
@@ -509,23 +623,23 @@
       }
     };
 
-    // Gestione Schede
+    // Navigazione Tab
     document.getElementById('tab-chapters').onclick = () => {
       document.getElementById('view-chapters').classList.remove('hidden');
       document.getElementById('view-entities').classList.add('hidden');
-      document.getElementById('tab-chapters').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-2 border-westeros-crimson font-bold text-westeros-crimson bg-parchment-100 rounded-t';
-      document.getElementById('tab-entities').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-2 border-transparent text-ink-muted hover:text-ink hover:bg-parchment-100 rounded-t transition';
+      document.getElementById('tab-chapters').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-4 border-entity-char font-black text-entity-char bg-white rounded-t shadow-sm';
+      document.getElementById('tab-entities').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-4 border-transparent text-ink-muted hover:text-ink hover:bg-white/80 rounded-t transition font-bold';
     };
 
     document.getElementById('tab-entities').onclick = () => {
       document.getElementById('view-chapters').classList.add('hidden');
       document.getElementById('view-entities').classList.remove('hidden');
-      document.getElementById('tab-entities').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-2 border-westeros-crimson font-bold text-westeros-crimson bg-parchment-100 rounded-t';
-      document.getElementById('tab-chapters').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-2 border-transparent text-ink-muted hover:text-ink hover:bg-parchment-100 rounded-t transition';
+      document.getElementById('tab-entities').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-4 border-entity-char font-black text-entity-char bg-white rounded-t shadow-sm';
+      document.getElementById('tab-chapters').className = 'px-4 py-2 font-title text-sm tracking-wider uppercase border-b-4 border-transparent text-ink-muted hover:text-ink hover:bg-white/80 rounded-t transition font-bold';
       renderEntities();
     };
 
-    // Eventi Filtri
+    // Filtri
     document.getElementById('filter-book').onchange = renderChaptersList;
     document.getElementById('filter-pov').onchange = renderChaptersList;
     document.getElementById('filter-search').oninput = renderChaptersList;
@@ -553,8 +667,9 @@
         synopsis: document.getElementById('inp-synopsis').value.trim(),
         characters: charsArray,
         mentioned: document.getElementById('inp-mentioned').value.split(',').map(s => s.trim()).filter(Boolean),
-        houses: document.getElementById('inp-houses').value.split(',').map(s => s.trim()).filter(Boolean),
         places: document.getElementById('inp-places-list').value.split(',').map(s => s.trim()).filter(Boolean),
+        houses: document.getElementById('inp-houses').value.split(',').map(s => s.trim()).filter(Boolean),
+        races: document.getElementById('inp-races').value.split(',').map(s => s.trim()).filter(Boolean),
         terms: document.getElementById('inp-terms').value.split(',').map(s => s.trim()).filter(Boolean),
         notes: document.getElementById('inp-notes').value.trim()
       };
@@ -583,10 +698,10 @@
 
     // Esportazione CSV
     document.getElementById('btn-export-csv').onclick = () => {
-      let csv = "ID,Libro,Capitolo,POV,Luogo,Personaggi\\n";
+      let csv = "ID,Libro,Capitolo,POV,Luogo,Personaggi\n";
       chapters.forEach(c => {
         const charNames = c.characters.map(ch => ch.name).join('; ');
-        csv += `"${c.id}","${c.book}","${c.title}","${c.pov}","${c.place}","${charNames}"\\n`;
+        csv += `"${c.id}","${c.book}","${c.title}","${c.pov}","${c.place}","${charNames}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -617,7 +732,7 @@
             alert("Database importato con successo!");
           }
         } catch (err) {
-          alert("File non valido: assicurati che sia un backup JSON valido.");
+          alert("File non valido: caricare un file JSON esportato da questa app.");
         }
       };
       reader.readAsText(file);
