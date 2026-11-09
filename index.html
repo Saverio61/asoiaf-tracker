@@ -1,744 +1,724 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A Song of Ice and Fire — Archivio Cronologico & Lore</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background-color: #0d1117;
-      color: #e6edf3;
-      font-family: 'Lora', serif;
-    }
-    .custom-scroll::-webkit-scrollbar { width: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #161b22; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
-    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #c69b3f; }
-    .font-cinzel { font-family: 'Cinzel', serif; }
-    .tag-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.15s ease;
-      border-width: 1px;
-    }
-    .tag-badge:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archivio delle Saghe</title>
+<style>
+  :root{
+    --carta:#f6f0e4; --carta2:#efe6d3; --inchiostro:#2b2420; --tenue:#6f6256;
+    --accento:#7a2a2a; --accento2:#a9553a; --linea:#d9ccb4; --scheda:#fffaf0; --evid:#f2e3b8;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  :root[data-tema="scuro"]{
+    --carta:#1d1a17; --carta2:#26221e; --inchiostro:#e9e0d1; --tenue:#a99d8c;
+    --accento:#d28a6e; --accento2:#e0a37f; --linea:#3a342d; --scheda:#2a2520; --evid:#4a3d22;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--carta);color:var(--inchiostro);font-family:var(--serif);line-height:1.6}
+  button,select,input{font:inherit;color:inherit}
+  a{color:var(--accento)}
+  header.top{position:sticky;top:0;z-index:5;background:var(--carta2);border-bottom:1px solid var(--linea);padding:10px 16px}
+  .riga{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  h1{font-size:1.15rem;margin:0;letter-spacing:.02em;color:var(--accento)}
+  .spazio{flex:1}
+  select,input[type=search]{background:var(--scheda);border:1px solid var(--linea);border-radius:6px;padding:6px 9px;font-family:var(--sans);font-size:.88rem}
+  .btn{background:var(--scheda);border:1px solid var(--linea);border-radius:6px;padding:6px 11px;cursor:pointer;font-family:var(--sans);font-size:.85rem}
+  .btn:hover{border-color:var(--accento)}
+  .btn.on{background:var(--accento);color:#fff;border-color:var(--accento)}
+  .tabs{display:flex;gap:4px;margin-top:8px}
+  .tab{padding:6px 14px;border:1px solid var(--linea);border-bottom:none;border-radius:6px 6px 0 0;background:var(--scheda);cursor:pointer;font-family:var(--sans);font-size:.88rem}
+  .tab.on{background:var(--carta);color:var(--accento);font-weight:600}
+  .barra-leggo{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:var(--sans);font-size:.83rem;color:var(--tenue);margin-top:8px}
+  main{display:grid;grid-template-columns:300px 1fr;gap:0;min-height:calc(100vh - 140px)}
+  aside{border-right:1px solid var(--linea);padding:12px;background:var(--carta2);overflow:auto;max-height:calc(100vh - 140px);position:sticky;top:130px}
+  section.pannello{padding:22px clamp(16px,4vw,48px);max-width:900px}
+  .voce{display:block;width:100%;text-align:left;padding:8px 10px;margin-bottom:4px;border:1px solid transparent;border-radius:6px;background:transparent;cursor:pointer}
+  .voce:hover{background:var(--scheda);border-color:var(--linea)}
+  .voce.sel{background:var(--scheda);border-color:var(--accento)}
+  .voce .n{font-family:var(--sans);font-size:.72rem;color:var(--tenue);display:block}
+  .voce .t{font-weight:600}
+  .voce .p{font-family:var(--sans);font-size:.76rem;color:var(--tenue)}
+  .voce.bloccata{opacity:.5;cursor:not-allowed}
+  .nota-aside{font-family:var(--sans);font-size:.78rem;color:var(--tenue);padding:6px 4px}
+  h2.cap{margin:0 0 4px;font-size:1.7rem;color:var(--accento)}
+  .meta{font-family:var(--sans);font-size:.83rem;color:var(--tenue);margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px 16px}
+  .breve{font-style:italic;border-left:3px solid var(--accento2);padding:4px 12px;margin:0 0 18px;background:var(--scheda)}
+  .sinossi p{margin:0 0 14px;text-align:justify;hyphens:auto}
+  .badge{display:inline-block;font-family:var(--sans);font-size:.72rem;padding:2px 8px;border-radius:99px;border:1px solid var(--accento2);color:var(--accento2);margin-left:6px}
+  .gruppo{margin:18px 0 6px}
+  .gruppo h3{font-family:var(--sans);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tenue);margin:0 0 6px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--sans);font-size:.82rem;background:var(--scheda);border:1px solid var(--linea);border-radius:99px;padding:3px 11px;cursor:pointer}
+  .chip:hover{border-color:var(--accento);color:var(--accento)}
+  .nota{background:var(--evid);border-radius:6px;padding:10px 14px;margin:18px 0;font-size:.95rem}
+  .fonte{font-family:var(--sans);font-size:.8rem;color:var(--tenue);border-top:1px solid var(--linea);margin-top:24px;padding-top:10px}
+  .azioni{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+  .griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+  .scheda{background:var(--scheda);border:1px solid var(--linea);border-radius:8px;padding:10px 12px;cursor:pointer;text-align:left}
+  .scheda:hover{border-color:var(--accento)}
+  .scheda .tp{font-family:var(--sans);font-size:.7rem;color:var(--accento2);text-transform:uppercase;letter-spacing:.07em}
+  .scheda .nm{font-weight:600}
+  .scheda .en{font-family:var(--sans);font-size:.76rem;color:var(--tenue)}
+  .filtri{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .elenco-cap{list-style:none;margin:0;padding:0}
+  .elenco-cap li{padding:5px 0;border-bottom:1px dotted var(--linea)}
+  .vuoto{color:var(--tenue);font-style:italic;padding:30px 0}
+  #areaStampa{display:none}
+  @media (max-width:760px){
+    main{grid-template-columns:1fr}
+    aside{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--linea)}
+  }
+  @media print{
+    :root{--carta:#fff;--carta2:#fff;--scheda:#fff;--inchiostro:#000;--tenue:#444;--linea:#bbb;--accento:#000;--accento2:#444;--evid:#eee}
+    header.top,aside,.azioni,.no-stampa,.chip{display:none!important}
+    .chips{display:block}
+    .chips .chip{display:inline!important;border:none;padding:0;background:none;font-size:.9rem}
+    .chips .chip::after{content:", "}
+    .chips .chip:last-child::after{content:""}
+    main{display:block}
+    section.pannello{padding:0;max-width:none}
+    body.stampa-libro main{display:none}
+    body.stampa-libro #areaStampa{display:block}
+    #areaStampa .capitolo-stampa{page-break-after:always}
+    #areaStampa .capitolo-stampa:last-child{page-break-after:auto}
+    .sinossi p{text-align:left}
+    a{text-decoration:none;color:#000}
+  }
+</style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#0d1117] text-[#e6edf3]">
-
-  <!-- Intestazione -->
-  <header class="border-b border-[#30363d] bg-[#161b22] sticky top-0 z-40 shadow-xl">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-      <div class="flex items-center space-x-3">
-        <span class="text-2xl text-[#d29922]">⚔️</span>
-        <div>
-          <h1 class="font-cinzel text-xl md:text-2xl font-bold tracking-wider text-[#d29922] uppercase">A Song of Ice and Fire</h1>
-          <p class="text-[10px] font-cinzel text-[#8b949e] uppercase tracking-widest font-semibold">Registro Cronologico & Lore Tracker</p>
-        </div>
-      </div>
-      
-      <div class="flex items-center gap-2 flex-wrap text-xs font-cinzel">
-        <button id="btn-export-json" class="px-3 py-1.5 rounded bg-[#21262d] border border-[#30363d] hover:border-[#d29922] text-[#c9d1d9] font-bold transition">
-          📥 Backup JSON
-        </button>
-        <button id="btn-export-csv" class="px-3 py-1.5 rounded bg-[#21262d] border border-[#30363d] hover:border-[#d29922] text-[#c9d1d9] font-bold transition">
-          📊 Esporta CSV
-        </button>
-        <label class="px-3 py-1.5 rounded bg-[#21262d] border border-[#30363d] hover:border-[#d29922] text-[#c9d1d9] font-bold transition cursor-pointer">
-          📤 Importa JSON
-          <input type="file" id="input-import-json" accept=".json" class="hidden">
-        </label>
-        <button id="btn-open-modal" class="px-4 py-1.5 rounded bg-[#8b1e1e] border border-[#f85149] hover:bg-[#a42828] text-white font-bold uppercase tracking-wider transition">
-          + Aggiungi Capitolo
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Area Principale -->
-  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
-    
-    <!-- Filtri e Navigazione -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#30363d]">
-      <div class="flex space-x-2">
-        <button id="tab-chapters" class="px-4 py-2 font-cinzel text-xs tracking-wider uppercase border-b-2 border-[#d29922] font-bold text-[#d29922] bg-[#161b22] rounded-t">
-          📖 Cronologia Capitoli
-        </button>
-        <button id="tab-entities" class="px-4 py-2 font-cinzel text-xs tracking-wider uppercase border-b-2 border-transparent text-[#8b949e] hover:text-[#c9d1d9] hover:bg-[#161b22]/50 rounded-t transition">
-          🏛️ Registro Generale Entità
-        </button>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-        <input type="text" id="filter-search" placeholder="Cerca personaggi, luoghi, note..." 
-          class="px-3 py-1.5 bg-[#161b22] border border-[#30363d] rounded text-sm w-full md:w-60 text-[#c9d1d9] placeholder-[#8b949e] focus:outline-none focus:border-[#d29922]">
-        
-        <select id="filter-book" class="px-2.5 py-1.5 bg-[#161b22] border border-[#30363d] rounded text-xs font-cinzel font-semibold text-[#c9d1d9] focus:outline-none focus:border-[#d29922]">
-          <option value="all">Tutti i Libri</option>
-          <option value="A Game of Thrones">A Game of Thrones</option>
-          <option value="A Clash of Kings">A Clash of Kings</option>
-          <option value="A Storm of Swords">A Storm of Swords</option>
-          <option value="A Feast for Crows">A Feast for Crows</option>
-          <option value="A Dance with Dragons">A Dance with Dragons</option>
-        </select>
-
-        <select id="filter-pov" class="px-2.5 py-1.5 bg-[#161b22] border border-[#30363d] rounded text-xs font-cinzel font-semibold text-[#c9d1d9] focus:outline-none focus:border-[#d29922]">
-          <option value="all">Tutti i POV</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- SEZIONE CAPITOLI -->
-    <div id="view-chapters" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      
-      <!-- Lista Laterale -->
-      <div class="lg:col-span-4 bg-[#161b22] border border-[#30363d] rounded-xl p-3 shadow-lg flex flex-col h-[750px]">
-        <div class="text-[11px] font-cinzel tracking-wider uppercase text-[#8b949e] mb-2 px-2 font-bold flex justify-between border-b border-[#30363d] pb-2">
-          <span>Elenco Capitoli</span>
-          <span id="chapter-count" class="bg-[#21262d] border border-[#30363d] px-2 py-0.5 rounded text-[#d29922] font-bold">0</span>
-        </div>
-        <div id="chapters-list" class="space-y-2 overflow-y-auto custom-scroll flex-1 pr-1"></div>
-      </div>
-
-      <!-- Dettaglio Completo -->
-      <div class="lg:col-span-8 bg-[#161b22] border border-[#30363d] rounded-xl p-6 shadow-lg overflow-y-auto custom-scroll h-[750px]" id="chapter-detail">
-        <div class="text-center py-28 text-[#8b949e] italic">Seleziona un capitolo dalla colonna di sinistra.</div>
-      </div>
-
-    </div>
-
-    <!-- SEZIONE ENCICLOPEDIA ENTITÀ -->
-    <div id="view-entities" class="hidden space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        
-        <div class="bg-[#161b22] p-4 border border-[#30363d] rounded-xl shadow-md">
-          <h3 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#ff7b72] mb-3 flex items-center justify-between border-b border-[#30363d] pb-2">
-            <span>Personaggi</span>
-            <span id="count-chars" class="bg-[#3c1418] border border-[#7d1a1a] text-[#ff7b72] px-2 py-0.5 rounded text-[11px]">0</span>
-          </h3>
-          <div id="entities-chars" class="space-y-2 max-h-[580px] overflow-y-auto custom-scroll text-sm"></div>
-        </div>
-
-        <div class="bg-[#161b22] p-4 border border-[#30363d] rounded-xl shadow-md">
-          <h3 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#79c0ff] mb-3 flex items-center justify-between border-b border-[#30363d] pb-2">
-            <span>Luoghi & Città</span>
-            <span id="count-places" class="bg-[#102a45] border border-[#1f4a75] text-[#79c0ff] px-2 py-0.5 rounded text-[11px]">0</span>
-          </h3>
-          <div id="entities-places" class="space-y-2 max-h-[580px] overflow-y-auto custom-scroll text-sm"></div>
-        </div>
-
-        <div class="bg-[#161b22] p-4 border border-[#30363d] rounded-xl shadow-md">
-          <h3 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#d29922] mb-3 flex items-center justify-between border-b border-[#30363d] pb-2">
-            <span>Casate Nobili</span>
-            <span id="count-houses" class="bg-[#3e2b0a] border border-[#6e4d0d] text-[#d29922] px-2 py-0.5 rounded text-[11px]">0</span>
-          </h3>
-          <div id="entities-houses" class="space-y-2 max-h-[580px] overflow-y-auto custom-scroll text-sm"></div>
-        </div>
-
-        <div class="bg-[#161b22] p-4 border border-[#30363d] rounded-xl shadow-md">
-          <h3 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#7ee787] mb-3 flex items-center justify-between border-b border-[#30363d] pb-2">
-            <span>Popoli & Fazioni</span>
-            <span id="count-races" class="bg-[#13321d] border border-[#235833] text-[#7ee787] px-2 py-0.5 rounded text-[11px]">0</span>
-          </h3>
-          <div id="entities-races" class="space-y-2 max-h-[580px] overflow-y-auto custom-scroll text-sm"></div>
-        </div>
-
-        <div class="bg-[#161b22] p-4 border border-[#30363d] rounded-xl shadow-md">
-          <h3 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#d2a8ff] mb-3 flex items-center justify-between border-b border-[#30363d] pb-2">
-            <span>Termini & Oggetti</span>
-            <span id="count-terms" class="bg-[#311d4d] border border-[#552f87] text-[#d2a8ff] px-2 py-0.5 rounded text-[11px]">0</span>
-          </h3>
-          <div id="entities-terms" class="space-y-2 max-h-[580px] overflow-y-auto custom-scroll text-sm"></div>
-        </div>
-
-      </div>
-    </div>
-  </main>
-
-  <!-- Modale Aggiungi Capitolo -->
-  <div id="modal-new-chapter" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-[#161b22] border border-[#30363d] rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
-      <div class="p-4 border-b border-[#30363d] flex justify-between items-center bg-[#21262d]">
-        <h3 class="font-cinzel text-sm tracking-wider uppercase font-bold text-[#d29922]">Aggiungi Capitolo al Database</h3>
-        <button id="btn-close-modal" class="text-[#8b949e] hover:text-white text-2xl font-bold">&times;</button>
-      </div>
-
-      <form id="form-chapter" class="p-5 overflow-y-auto custom-scroll space-y-4 text-xs font-semibold">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block uppercase tracking-wider text-[#8b949e] mb-1">Titolo Capitolo</label>
-            <input type="text" id="inp-title" required placeholder="es. Catelyn I" class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#8b949e] mb-1">Libro</label>
-            <select id="inp-book" class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-              <option value="A Game of Thrones">A Game of Thrones</option>
-              <option value="A Clash of Kings">A Clash of Kings</option>
-              <option value="A Storm of Swords">A Storm of Swords</option>
-              <option value="A Feast for Crows">A Feast for Crows</option>
-              <option value="A Dance with Dragons">A Dance with Dragons</option>
-            </select>
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#8b949e] mb-1">Punto di Vista (P.O.V.)</label>
-            <input type="text" id="inp-pov" required placeholder="es. Catelyn" class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#8b949e] mb-1">Luogo Principale</label>
-            <input type="text" id="inp-place" required placeholder="es. Winterfell" class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-        </div>
-
-        <div>
-          <label class="block uppercase tracking-wider text-[#8b949e] mb-1">Sinossi Funzionale</label>
-          <textarea id="inp-synopsis" rows="4" required class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9] leading-relaxed"></textarea>
-        </div>
-
-        <div class="border-t border-[#30363d] pt-3 space-y-3">
-          <div>
-            <label class="block uppercase tracking-wider text-[#ff7b72] mb-1">Personaggi Presenti (separati da virgola)</label>
-            <input type="text" id="inp-chars" placeholder="Catelyn Stark, Eddard Stark..." class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#ff7b72] mb-1">Personaggi Menzionati</label>
-            <input type="text" id="inp-mentioned" placeholder="Robert Baratheon, Jon Arryn..." class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#79c0ff] mb-1">Luoghi Citati</label>
-            <input type="text" id="inp-places-list" placeholder="King's Landing, The Eyrie..." class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#d29922] mb-1">Casate Nobili</label>
-            <input type="text" id="inp-houses" placeholder="House Tully, House Stark..." class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#7ee787] mb-1">Popoli, Razze & Fazioni</label>
-            <input type="text" id="inp-races" placeholder="First Men, Night's Watch..." class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#d2a8ff] mb-1">Termini & Oggetti</label>
-            <input type="text" id="inp-terms" placeholder="Heart tree, Hand of the King..." class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]">
-          </div>
-          <div>
-            <label class="block uppercase tracking-wider text-[#8b949e] mb-1">Note & Foreshadowing</label>
-            <textarea id="inp-notes" rows="2" class="w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9]"></textarea>
-          </div>
-        </div>
-
-        <div class="pt-3 border-t border-[#30363d] flex justify-end gap-2">
-          <button type="button" id="btn-cancel-modal" class="px-4 py-1.5 border border-[#30363d] rounded text-[#8b949e] hover:text-white">Annulla</button>
-          <button type="submit" class="px-5 py-1.5 bg-[#8b1e1e] border border-[#f85149] text-white rounded font-bold uppercase tracking-wider hover:bg-[#a42828]">Salva</button>
-        </div>
-      </form>
-    </div>
+<body>
+<header class="top">
+  <div class="riga">
+    <h1>📜 Archivio delle Saghe</h1>
+    <select id="selSaga" aria-label="Saga"></select>
+    <select id="selLibro" aria-label="Libro"></select>
+    <span class="spazio"></span>
+    <input id="cerca" type="search" placeholder="Cerca capitoli o voci…" aria-label="Cerca">
+    <button class="btn" id="btnTema" title="Chiaro/scuro">🌗</button>
   </div>
+  <div class="tabs">
+    <div class="tab on" data-vista="capitoli">Capitoli</div>
+    <div class="tab" data-vista="database">Database</div>
+    <div class="tab" data-vista="info">Info e fonti</div>
+  </div>
+  <div class="barra-leggo">
+    <label><input type="checkbox" id="chkAnti"> Modalità anti-spoiler</label>
+    <span id="boxLetto" style="display:none">Letto fino a: <select id="selLetto"></select></span>
+    <span id="msgSpoiler"></span>
+  </div>
+</header>
 
-  <script>
-    // Tabella Canonica per link AWOIAF diretti senza errori
-    const CANON_MAPPING = {
-      'casa stark': 'House_Stark',
-      'casa royce': 'House_Royce',
-      'casa mallister': 'House_Mallister',
-      'casa greyjoy': 'House_Greyjoy',
-      'casa cassel': 'House_Cassel',
-      'casa baratheon': 'House_Baratheon',
-      'casa targaryen': 'House_Targaryen',
-      'casa arryn': 'House_Arryn',
-      'casa tully': 'House_Tully',
-      'casa lannister': 'House_Lannister',
-      'grande inverno': 'Winterfell',
-      'la barriera': 'The_Wall',
-      'oltre la barriera': 'Beyond_the_Wall',
-      'bosco stregato': 'Haunted_Forest',
-      'castello nero': 'Castle_Black',
-      'approdo del re': "King's_Landing",
-      'isole di ferro': 'Iron_Islands',
-      'pyke': 'Pyke_(castle)',
-      'valyria': 'Valyria',
-      'gli estranei': 'Others',
-      'estranei': 'Others',
-      'guardiani della notte': "Night's_Watch",
-      'popolo libero': 'Free_Folk',
-      'bruti': 'Free_Folk',
-      'non-morti': 'Wights',
-      'primi uomini': 'First_Men',
-      'metalupi': 'Direwolf',
-      'metalupo': 'Direwolf',
-      'ghiaccio': 'Ice_(sword)',
-      'acciaio di valyria': 'Valyrian_steel',
-      'albero sentinella': 'Sentinel_tree',
-      'legnoferro': 'Ironwood',
-      'confratello giurato': "Night's_Watch#Organization"
-    };
+<main>
+  <aside id="laterale"></aside>
+  <section class="pannello" id="pannello"></section>
+</main>
+<div id="areaStampa"></div>
 
-    function getWikiUrl(entityName) {
-      if (!entityName) return '#';
-      let clean = entityName.split('(')[0].trim();
-      const lower = clean.toLowerCase();
-
-      if (CANON_MAPPING[lower]) {
-        return `https://awoiaf.westeros.org/index.php/${CANON_MAPPING[lower]}`;
-      }
-      if (lower.startsWith('casa ')) {
-        const houseName = clean.substring(5).trim();
-        return `https://awoiaf.westeros.org/index.php/House_${encodeURIComponent(houseName)}`;
-      }
-      return `https://awoiaf.westeros.org/index.php?search=${encodeURIComponent(clean)}&title=Special%3ASearch&go=Go`;
-    }
-
-    function makeBadge(name, type) {
-      const url = getWikiUrl(name);
-      let styles = '';
-      if (type === 'char')  styles = 'bg-[#3c1418] border-[#7d1a1a] text-[#ff7b72] hover:bg-[#581c21] hover:text-white';
-      if (type === 'place') styles = 'bg-[#102a45] border-[#1f4a75] text-[#79c0ff] hover:bg-[#163a61] hover:text-white';
-      if (type === 'house') styles = 'bg-[#3e2b0a] border-[#6e4d0d] text-[#d29922] hover:bg-[#52390e] hover:text-white';
-      if (type === 'race')  styles = 'bg-[#13321d] border-[#235833] text-[#7ee787] hover:bg-[#1c4729] hover:text-white';
-      if (type === 'item')  styles = 'bg-[#311d4d] border-[#552f87] text-[#d2a8ff] hover:bg-[#432769] hover:text-white';
-
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="tag-badge ${styles}" title="Apri su A Wiki of Ice and Fire">
-        <span>${name}</span>
-        <span class="text-[10px] opacity-70">↗</span>
-      </a>`;
-    }
-
-    const INITIAL_CHAPTERS = [
-      {
-        id: "agot-prologue",
-        title: "Prologo",
-        book: "A Game of Thrones",
-        pov: "Will",
-        place: "Beyond the Wall",
-        chronology: "Prologo → Bran I (Fine 297 CA)",
-        synopsis: "Tre ranger dei Guardiani della Notte — Ser Waymar Royce, Will e il veterano Gared — sono sulle tracce di un gruppo di razziatori bruti nel Bosco Stregato, a 9 giorni di marcia a nord della Barriera. Will trova il loro accampamento: non ci sono fuochi e gli otto bruti giacciono immobili nella neve senza tracce di sangue. Gared insiste per ritirarsi verso la Barriera temendo una tempesta e un freddo innaturale, ma Royce, diciottenne aristocratico alla sua prima spedizione, ordina di avanzare.\n\nLasciato Gared a guardia dei cavalli senza fuoco, Will e Royce risalgono il costone roccioso: i cadaveri sono svaniti nel nulla. Un Estraneo emerge dalle ombre e ingaggia un duello con Royce; la spada d'acciaio umano del nobile esplode in mille schegge a contatto con la lama di cristallo dell'Estraneo. Royce viene massacrato. Quando Will scende dall'albero sentinella per raccogliere la spada spezzata come prova per i comandanti, il cadavere di Waymar si ridesta con occhi blu zaffiro e lo strangola con mani gelide.",
-        characters: [
-          { name: "Will", role: "POV del capitolo. Ranger silenzioso dei Guardiani della Notte.", status: "Deceduto (strangolato da Waymar risorto)" },
-          { name: "Waymar Royce", role: "Terzo figlio di Lord Yohn Royce. Cavaliere nobile, 18 anni.", status: "Ucciso dagli Estranei e risorto come Non-Morto" },
-          { name: "Gared", role: "Veterano con 40 anni di servizio alla Barriera.", status: "Sopravvissuto (in fuga verso sud)" }
-        ],
-        mentioned: ["Aemon", "Robert I Baratheon", "Jeor Mormont"],
-        places: ["Beyond the Wall", "Haunted Forest", "Castle Black", "The Wall", "Westeros"],
-        houses: ["House Royce", "House Mallister"],
-        races: ["Others", "Night's Watch", "Free Folk", "Wights"],
-        terms: ["Crystal sword", "Sentinel tree", "Ironwood", "Sworn Brother"],
-        notes: "• Apertura con l'orrore cosmico e sovrannaturale prima dell'introduzione dei conflitti politici umani.\n• Gared fugge in preda al terrore verso sud: la sua cattura e decapitazione per diserzione darà inizio a Bran I.\n• L'acciaio ordinario non resiste al gelo estremo delle armi degli Estranei e si scheggia istantaneamente."
-      },
-      {
-        id: "agot-chapter-1",
-        title: "Capitolo 1 (Bran I)",
-        book: "A Game of Thrones",
-        pov: "Bran",
-        place: "Winterfell",
-        chronology: "Bran I → Catelyn I (298 CA)",
-        synopsis: "Bran Stark, a sette anni, cavalca per la prima volta con il padre Lord Eddard Stark, i fratelli Robb e Jon, e Theon Greyjoy per assistere a un'esecuzione. Il condannato è Gared, il ranger superstite del massacro del Prologo. Gared appare emaciato e muto di terrore. Lord Eddard sguaina la spada ancestrale Ghiaccio (Ice), uno spadone in acciaio di Valyria largo quattro dita, e decapita il disertore con un colpo netto. Ned spiega a Bran che chi pronuncia la sentenza deve essere colui che cala la spada per comprendere il peso morale della morte.\n\nSulla strada del ritorno, il gruppo scopre una femmina gigantesca di metalupo (Direwolf) morta con un pezzo di corno di cervo conficcato nella gola, circondata da cinque cuccioli appena nati. Jon Snow convince Ned a non sopprimerli, facendo notare che il metalupo è il simbolo araldico degli Stark e che ci sono cinque cuccioli (tre maschi e due femmine) per i cinque figli legittimi di Eddard. Poco dopo, Jon si imbatte in un sesto cucciolo, albino dagli occhi rossi, allontanatosi dagli altri prima della morte della madre: Bran nota che quel cucciolo spetta a Jon.",
-        characters: [
-          { name: "Bran Stark", role: "POV del capitolo. Quarto figlio di Eddard, ha 7 anni.", status: "In vita" },
-          { name: "Eddard Stark", role: "Lord di Grande Inverno e Protettore del Nord. Esecutore.", status: "In vita" },
-          { name: "Robb Stark", role: "Erede quattordicenne di Grande Inverno.", status: "In vita" },
-          { name: "Jon Snow", role: "Figlio bastardo quattordicenne di Ned Stark.", status: "In vita" },
-          { name: "Theon Greyjoy", role: "Erede di Pyke, pupillo e ostaggio di Ned, 19 anni.", status: "In vita" },
-          { name: "Gared", role: "Disertore dei Guardiani della Notte superstite del Prologo.", status: "Deceduto (decapitato da Eddard Stark)" },
-          { name: "Jory Cassel", role: "Capitano della guardia di Grande Inverno.", status: "In vita" },
-          { name: "Hullen", role: "Mastro dei cavalli di Grande Inverno.", status: "In vita" },
-          { name: "Harwin", role: "Guardia di Grande Inverno, figlio di Hullen.", status: "In vita" },
-          { name: "Direwolf", role: "5 cuccioli per i figli legittimi + 1 albino dagli occhi rossi (Ghost).", status: "In vita" }
-        ],
-        mentioned: ["Mance Rayder", "Robert I Baratheon", "Catelyn Stark", "Sansa Stark", "Arya Stark", "Rickon Stark"],
-        places: ["Winterfell", "The Wall", "Iron Islands", "Pyke", "Valyria", "King's Landing"],
-        houses: ["House Stark", "House Greyjoy", "House Cassel", "House Baratheon", "House Targaryen"],
-        races: ["First Men", "Night's Watch", "Free Folk", "Direwolf"],
-        terms: ["Ice", "Valyrian steel", "Ironwood", "Warden of the North", "Greatsword"],
-        notes: "• La lupa uccisa dal corno del cervo prefigura il destino tragico di Casa Stark provocato da Casa Baratheon.\n• Ned presume che Gared sia impazzito per paura dei bruti, ignorando il risveglio degli Estranei.\n• Il sesto cucciolo albino, muto e appartato, simboleggia l'isolamento e il destino di Jon Snow."
-      }
-    ];
-
-    let chapters = JSON.parse(localStorage.getItem('asoiaf_tracker_stable_v1')) || INITIAL_CHAPTERS;
-    let selectedChapterId = chapters[0]?.id || null;
-
-    function saveState() {
-      localStorage.setItem('asoiaf_tracker_stable_v1', JSON.stringify(chapters));
-    }
-
-    function renderChaptersList() {
-      const container = document.getElementById('chapters-list');
-      const bookFilter = document.getElementById('filter-book').value;
-      const povFilter = document.getElementById('filter-pov').value;
-      const searchFilter = document.getElementById('filter-search').value.toLowerCase();
-
-      const filtered = chapters.filter(c => {
-        const matchesBook = (bookFilter === 'all' || c.book === bookFilter);
-        const matchesPov = (povFilter === 'all' || c.pov === povFilter);
-        const matchesSearch = !searchFilter || 
-          c.title.toLowerCase().includes(searchFilter) ||
-          c.synopsis.toLowerCase().includes(searchFilter) ||
-          c.characters.some(ch => ch.name.toLowerCase().includes(searchFilter)) ||
-          c.places.some(p => p.toLowerCase().includes(searchFilter));
-        return matchesBook && matchesPov && matchesSearch;
-      });
-
-      document.getElementById('chapter-count').textContent = `${filtered.length} di ${chapters.length}`;
-      container.innerHTML = '';
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<p class="text-xs text-[#8b949e] italic p-3 text-center">Nessun capitolo trovato.</p>';
-        return;
-      }
-
-      filtered.forEach(c => {
-        const isSelected = (c.id === selectedChapterId);
-        const card = document.createElement('div');
-        card.className = `p-3 rounded-lg border transition-all cursor-pointer ${
-          isSelected 
-            ? 'bg-[#21262d] border-[#d29922] shadow-md' 
-            : 'bg-[#161b22] hover:bg-[#21262d]/60 border-[#30363d]'
-        }`;
-        card.innerHTML = `
-          <div class="flex justify-between items-start mb-1">
-            <h4 class="font-cinzel font-bold text-sm text-[#e6edf3]">${c.title}</h4>
-            <span class="text-[10px] font-cinzel px-1.5 py-0.5 rounded bg-[#3c1418] border border-[#7d1a1a] text-[#ff7b72] font-bold">${c.pov}</span>
-          </div>
-          <p class="text-xs text-[#79c0ff] truncate">${c.place}</p>
-          <p class="text-[10px] text-[#8b949e] font-cinzel mt-1 tracking-wider uppercase">${c.book}</p>
-        `;
-        card.onclick = () => {
-          selectedChapterId = c.id;
-          renderChaptersList();
-          renderChapterDetail();
-        };
-        container.appendChild(card);
-      });
-    }
-
-    function renderChapterDetail() {
-      const container = document.getElementById('chapter-detail');
-      const c = chapters.find(item => item.id === selectedChapterId);
-
-      if (!c) {
-        container.innerHTML = '<div class="text-center py-28 text-[#8b949e] italic">Seleziona un capitolo.</div>';
-        return;
-      }
-
-      container.innerHTML = `
-        <div class="space-y-6">
-          <div class="border-b border-[#30363d] pb-4">
-            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
-              <span class="text-xs font-cinzel tracking-widest uppercase text-[#d29922] font-bold">${c.book}</span>
-              <span class="text-[11px] font-cinzel bg-[#21262d] border border-[#30363d] px-2.5 py-1 rounded text-[#8b949e]">${c.chronology || 'In sequenza'}</span>
-            </div>
-            <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-[#e6edf3] tracking-wide">${c.title}</h2>
-            <div class="flex flex-wrap gap-4 mt-2 text-xs font-semibold text-[#8b949e]">
-              <span>P.O.V.: <strong class="text-[#ff7b72] font-cinzel font-bold">${c.pov}</strong></span>
-              <span>•</span>
-              <span>Luogo: <a href="${getWikiUrl(c.place)}" target="_blank" class="text-[#79c0ff] hover:underline font-semibold">${c.place} ↗</a></span>
-            </div>
-          </div>
-
-          <!-- Sinossi -->
-          <div>
-            <h4 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#d29922] mb-2">Sinossi Funzionale</h4>
-            <div class="text-sm leading-relaxed bg-[#0d1117] p-4 rounded-lg border border-[#30363d] text-[#c9d1d9] space-y-3 font-normal">
-              ${c.synopsis.split('\n\n').map(p => `<p>${p}</p>`).join('')}
-            </div>
-          </div>
-
-          <!-- Personaggi Presenti -->
-          <div>
-            <h4 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#d29922] mb-3">Personaggi Presenti (${c.characters.length})</h4>
-            <div class="overflow-x-auto rounded-lg border border-[#30363d]">
-              <table class="w-full text-left text-xs border-collapse bg-[#0d1117]">
-                <thead>
-                  <tr class="bg-[#21262d] border-b border-[#30363d] font-cinzel text-[11px] text-[#8b949e] uppercase">
-                    <th class="p-3">Nome (AWOIAF)</th>
-                    <th class="p-3">Ruolo / Profilo</th>
-                    <th class="p-3">Stato</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-[#30363d]">
-                  ${c.characters.map(ch => `
-                    <tr class="hover:bg-[#161b22] transition">
-                      <td class="p-3 font-bold">
-                        <a href="${getWikiUrl(ch.name)}" target="_blank" class="text-[#ff7b72] hover:underline inline-flex items-center gap-1 font-semibold">
-                          ${ch.name} <span class="text-[10px] opacity-70">↗</span>
-                        </a>
-                      </td>
-                      <td class="p-3 text-[#c9d1d9]">${ch.role}</td>
-                      <td class="p-3 italic text-[#8b949e] font-medium">${ch.status}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Liste Entità -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            <div class="bg-[#0d1117] p-3.5 rounded-lg border border-[#30363d]">
-              <h5 class="font-cinzel text-[11px] uppercase tracking-wider font-bold text-[#ff7b72] mb-2">Personaggi Menzionati</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${c.mentioned.map(m => makeBadge(m, 'char')).join('')}
-              </div>
-            </div>
-
-            <div class="bg-[#0d1117] p-3.5 rounded-lg border border-[#30363d]">
-              <h5 class="font-cinzel text-[11px] uppercase tracking-wider font-bold text-[#79c0ff] mb-2">Luoghi & Città Citati</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${c.places.map(p => makeBadge(p, 'place')).join('')}
-              </div>
-            </div>
-
-            <div class="bg-[#0d1117] p-3.5 rounded-lg border border-[#30363d]">
-              <h5 class="font-cinzel text-[11px] uppercase tracking-wider font-bold text-[#d29922] mb-2">Casate Nobili</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${c.houses.map(h => makeBadge(h, 'house')).join('')}
-              </div>
-            </div>
-
-            <div class="bg-[#0d1117] p-3.5 rounded-lg border border-[#30363d]">
-              <h5 class="font-cinzel text-[11px] uppercase tracking-wider font-bold text-[#7ee787] mb-2">Popoli & Fazioni</h5>
-              <div class="flex flex-wrap gap-1.5">
-                ${(c.races || []).map(r => makeBadge(r, 'race')).join('')}
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Termini & Oggetti -->
-          <div class="bg-[#0d1117] p-3.5 rounded-lg border border-[#30363d]">
-            <h5 class="font-cinzel text-[11px] uppercase tracking-wider font-bold text-[#d2a8ff] mb-2">Termini & Oggetti di Lore</h5>
-            <div class="flex flex-wrap gap-1.5">
-              ${c.terms.map(t => makeBadge(t, 'item')).join('')}
-            </div>
-          </div>
-
-          <!-- Note Critiche -->
-          ${c.notes ? `
-            <div>
-              <h4 class="font-cinzel text-xs tracking-wider uppercase font-bold text-[#d29922] mb-2">Note Critiche & Presagi</h4>
-              <div class="text-xs bg-[#21262d] p-4 rounded-lg border border-[#30363d] space-y-1.5 text-[#e6edf3] leading-relaxed">
-                ${c.notes.split('\n').map(n => `<p>${n}</p>`).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          <div class="pt-4 border-t border-[#30363d] flex justify-end">
-            <button onclick="deleteChapter('${c.id}')" class="text-xs text-[#ff7b72] hover:underline">Elimina questo capitolo</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderEntities() {
-      const chars = new Map();
-      const places = new Set();
-      const houses = new Set();
-      const races = new Set();
-      const terms = new Set();
-
-      chapters.forEach(c => {
-        c.characters.forEach(ch => {
-          if (!chars.has(ch.name)) chars.set(ch.name, { role: ch.role, status: ch.status, chapters: [] });
-          chars.get(ch.name).chapters.push(c.title);
-        });
-        (c.places || []).forEach(p => places.add(p));
-        (c.houses || []).forEach(h => houses.add(h));
-        (c.races || []).forEach(r => races.add(r));
-        (c.terms || []).forEach(t => terms.add(t));
-      });
-
-      document.getElementById('count-chars').textContent = chars.size;
-      document.getElementById('count-places').textContent = places.size;
-      document.getElementById('count-houses').textContent = houses.size;
-      document.getElementById('count-races').textContent = races.size;
-      document.getElementById('count-terms').textContent = terms.size;
-
-      document.getElementById('entities-chars').innerHTML = Array.from(chars.entries()).map(([name, data]) => `
-        <div class="p-2.5 rounded bg-[#0d1117] border border-[#30363d]">
-          <a href="${getWikiUrl(name)}" target="_blank" class="text-[#ff7b72] hover:underline font-bold text-xs inline-flex items-center gap-1">
-            ${name} <span>↗</span>
-          </a>
-          <div class="text-[11px] text-[#8b949e] mt-0.5">${data.role}</div>
-          <div class="text-[10px] text-[#ff7b72] italic mt-1 font-semibold">${data.status}</div>
-          <div class="text-[9px] text-[#8b949e] mt-1 uppercase font-cinzel">Capitoli: ${data.chapters.join(', ')}</div>
-        </div>
-      `).join('');
-
-      document.getElementById('entities-places').innerHTML = Array.from(places).map(p => `
-        <div class="p-2 rounded bg-[#0d1117] border border-[#30363d]">
-          <a href="${getWikiUrl(p)}" target="_blank" class="text-[#79c0ff] hover:underline text-xs font-semibold inline-flex items-center gap-1">
-            ${p} <span>↗</span>
-          </a>
-        </div>
-      `).join('');
-
-      document.getElementById('entities-houses').innerHTML = Array.from(houses).map(h => `
-        <div class="p-2 rounded bg-[#0d1117] border border-[#30363d]">
-          <a href="${getWikiUrl(h)}" target="_blank" class="text-[#d29922] hover:underline text-xs font-semibold inline-flex items-center gap-1">
-            ${h} <span>↗</span>
-          </a>
-        </div>
-      `).join('');
-
-      document.getElementById('entities-races').innerHTML = Array.from(races).map(r => `
-        <div class="p-2 rounded bg-[#0d1117] border border-[#30363d]">
-          <a href="${getWikiUrl(r)}" target="_blank" class="text-[#7ee787] hover:underline text-xs font-semibold inline-flex items-center gap-1">
-            ${r} <span>↗</span>
-          </a>
-        </div>
-      `).join('');
-
-      document.getElementById('entities-terms').innerHTML = Array.from(terms).map(t => `
-        <div class="p-2 rounded bg-[#0d1117] border border-[#30363d]">
-          <a href="${getWikiUrl(t)}" target="_blank" class="text-[#d2a8ff] hover:underline text-xs font-semibold inline-flex items-center gap-1">
-            ${t} <span>↗</span>
-          </a>
-        </div>
-      `).join('');
-    }
-
-    function updatePovFilter() {
-      const povSelect = document.getElementById('filter-pov');
-      const povs = Array.from(new Set(chapters.map(c => c.pov)));
-      povSelect.innerHTML = '<option value="all">Tutti i POV</option>' + 
-        povs.map(p => `<option value="${p}">${p}</option>`).join('');
-    }
-
-    window.deleteChapter = function(id) {
-      if (confirm('Eliminare questo capitolo dal database?')) {
-        chapters = chapters.filter(c => c.id !== id);
-        selectedChapterId = chapters[0]?.id || null;
-        saveState();
-        updatePovFilter();
-        renderChaptersList();
-        renderChapterDetail();
-        renderEntities();
-      }
-    };
-
-    document.getElementById('tab-chapters').onclick = () => {
-      document.getElementById('view-chapters').classList.remove('hidden');
-      document.getElementById('view-entities').classList.add('hidden');
-      document.getElementById('tab-chapters').className = 'px-4 py-2 font-cinzel text-xs tracking-wider uppercase border-b-2 border-[#d29922] font-bold text-[#d29922] bg-[#161b22] rounded-t';
-      document.getElementById('tab-entities').className = 'px-4 py-2 font-cinzel text-xs tracking-wider uppercase border-b-2 border-transparent text-[#8b949e] hover:text-[#c9d1d9] hover:bg-[#161b22]/50 rounded-t transition';
-    };
-
-    document.getElementById('tab-entities').onclick = () => {
-      document.getElementById('view-chapters').classList.add('hidden');
-      document.getElementById('view-entities').classList.remove('hidden');
-      document.getElementById('tab-entities').className = 'px-4 py-2 font-cinzel text-xs tracking-wider uppercase border-b-2 border-[#d29922] font-bold text-[#d29922] bg-[#161b22] rounded-t';
-      document.getElementById('tab-chapters').className = 'px-4 py-2 font-cinzel text-xs tracking-wider uppercase border-b-2 border-transparent text-[#8b949e] hover:text-[#c9d1d9] hover:bg-[#161b22]/50 rounded-t transition';
-      renderEntities();
-    };
-
-    document.getElementById('filter-book').onchange = renderChaptersList;
-    document.getElementById('filter-pov').onchange = renderChaptersList;
-    document.getElementById('filter-search').oninput = renderChaptersList;
-
-    const modal = document.getElementById('modal-new-chapter');
-    document.getElementById('btn-open-modal').onclick = () => modal.classList.remove('hidden');
-    document.getElementById('btn-close-modal').onclick = () => modal.classList.add('hidden');
-    document.getElementById('btn-cancel-modal').onclick = () => modal.classList.add('hidden');
-
-    document.getElementById('form-chapter').onsubmit = (e) => {
-      e.preventDefault();
-      const title = document.getElementById('inp-title').value.trim();
-      const charsArray = document.getElementById('inp-chars').value.split(',').map(s => s.trim()).filter(Boolean).map(name => ({
-        name, role: "Personaggio registrato", status: "In vita"
-      }));
-
-      const newChap = {
-        id: 'chap-' + Date.now(),
-        title: title,
-        book: document.getElementById('inp-book').value,
-        pov: document.getElementById('inp-pov').value.trim(),
-        place: document.getElementById('inp-place').value.trim(),
-        chronology: "In sequenza",
-        synopsis: document.getElementById('inp-synopsis').value.trim(),
-        characters: charsArray,
-        mentioned: document.getElementById('inp-mentioned').value.split(',').map(s => s.trim()).filter(Boolean),
-        places: document.getElementById('inp-places-list').value.split(',').map(s => s.trim()).filter(Boolean),
-        houses: document.getElementById('inp-houses').value.split(',').map(s => s.trim()).filter(Boolean),
-        races: document.getElementById('inp-races').value.split(',').map(s => s.trim()).filter(Boolean),
-        terms: document.getElementById('inp-terms').value.split(',').map(s => s.trim()).filter(Boolean),
-        notes: document.getElementById('inp-notes').value.trim()
-      };
-
-      chapters.push(newChap);
-      selectedChapterId = newChap.id;
-      saveState();
-      updatePovFilter();
-      renderChaptersList();
-      renderChapterDetail();
-      renderEntities();
-      modal.classList.add('hidden');
-      document.getElementById('form-chapter').reset();
-    };
-
-    document.getElementById('btn-export-json').onclick = () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(chapters, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", "asoiaf_database_backup.json");
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    };
-
-    document.getElementById('btn-export-csv').onclick = () => {
-      let csv = "ID,Libro,Capitolo,POV,Luogo,Personaggi\n";
-      chapters.forEach(c => {
-        const charNames = c.characters.map(ch => ch.name).join('; ');
-        csv += `"${c.id}","${c.book}","${c.title}","${c.pov}","${c.place}","${charNames}"\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "asoiaf_capitoli.csv");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    };
-
-    document.getElementById('input-import-json').onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const imported = JSON.parse(event.target.result);
-          if (Array.isArray(imported)) {
-            chapters = imported;
-            selectedChapterId = chapters[0]?.id || null;
-            saveState();
-            updatePovFilter();
-            renderChaptersList();
-            renderChapterDetail();
-            renderEntities();
-            alert("Database importato con successo!");
-          }
-        } catch (err) {
-          alert("File JSON non valido.");
+<script>
+/* Cronache del Ghiaccio e del Fuoco — dati (bozza: Prologo + primi 5 capitoli di A Game of Thrones)
+   Sinossi tradotte e rielaborate in italiano da A Wiki of Ice and Fire (CC BY-SA). */
+(window.ARCHIVIO = window.ARCHIVIO || []).push({
+  id: "martin",
+  nome: "Cronache del Ghiaccio e del Fuoco",
+  nomeEn: "A Song of Ice and Fire",
+  autore: "George R. R. Martin",
+  fonte: {
+    nome: "A Wiki of Ice and Fire",
+    url: "https://awoiaf.westeros.org/",
+    licenza: "CC BY-SA",
+    ricerca: "https://awoiaf.westeros.org/index.php?search="
+  },
+  libri: [
+    {
+      id: "agot",
+      titolo: "Il Trono di Spade",
+      titoloEn: "A Game of Thrones",
+      anno: 1996,
+      totaleCapitoli: 73,
+      capitoli: [
+        {
+          n: 0, titolo: "Prologo", pov: "Will", luogo: "Foresta infestata, oltre la Barriera", pagina: "1 (US HC)",
+          url: "https://awoiaf.westeros.org/index.php/A_Game_of_Thrones-Prologue",
+          breve: "Tre esploratori della Guardia della Notte seguono le tracce di un gruppo di razziatori bruti oltre la Barriera e si imbattono negli Estranei.",
+          sinossi: [
+            "Gared, Will e ser Waymar Royce, tre esploratori della Guardia della Notte, stanno seguendo le tracce di una banda di razziatori bruti nella foresta infestata, a nord della Barriera. Will ha riferito di aver trovato dei bruti e di averli visti tutti morti. Gared, un uomo anziano che veste il nero da decenni, è a disagio e insiste perché tornino alla Barriera: li aspettano otto o nove giorni di viaggio, che possono diventare quindici se nevica. Waymar, un giovane di nobile nascita di diciotto anni, ha il comando; dopo aver preso in giro le paure di Gared, chiede di nuovo a Will i particolari di ciò che ha visto.",
+            "Will spiega di aver visto l'accampamento dei bruti: il riparo di fortuna era coperto di neve, non c'era alcun fuoco e nessuno si è mosso per tutto il tempo in cui li ha osservati. Giacevano a terra come morti, ma non si vedeva sangue. Waymar suggerisce che dormissero, ma Will insiste che sono morti. C'era anche una donna su un albero, e nemmeno lei si muoveva. Gared pensa che siano stati uccisi dal freddo, ma Waymar fa notare che il tempo non è stato abbastanza rigido da gelare degli uomini in quel modo. Chiede a Will di guidarli fino ai bruti morti.",
+            "Al calare della notte i confratelli tornano verso l'accampamento. Will e Gared sentono entrambi che qualcosa non va, ma Waymar li deride ancora e ordina a Gared di restare indietro a guardia dei cavalli. Quando Gared propone di accendere un fuoco, Waymar gli ordina sarcasticamente di non farlo. Will teme che l'insolenza di Waymar spinga Gared a sfoderare la spada, ma alla fine Gared cede e il fuoco non viene acceso.",
+            "Will e Waymar salgono sulla cresta, Waymar molto più rumoroso di Will. Giunto al suo punto di osservazione, Will vede che i corpi sono spariti. Waymar, in piedi e ben visibile in cima alla cresta, ride degli avvertimenti di Will che gli intima di abbassarsi. Deciso a ritrovare i bruti e a fare del suo primo incarico di esplorazione un successo, Waymar ordina a Will di arrampicarsi su un albero e cercare un fuoco.",
+            "Will sale con riluttanza su un albero sentinella. Sotto di lui, Waymar sfida un nemico invisibile. Will crede di scorgere un'ombra bianca che si muove, ma non ne è sicuro. Sta per gridare un avvertimento, ma si ferma, incerto. Waymar lo chiama con una nota di inquietudine nella voce, gira su se stesso con la spada sguainata e chiede del freddo improvviso, che anche Will avverte.",
+            "Dal bosco emerge un Estraneo: alto, scarno e bianco, punteggiato da un luccichio grigioverde. Waymar, nervoso, gli intima di non avvicinarsi oltre e si prepara a combattere, sfidando l'Estraneo a «ballare» con lui. Will nota che in quel momento Waymar non è più un ragazzo, ma un vero uomo della Guardia della Notte. Quando altri Estranei compaiono tra gli alberi, Will pensa di gridare un avvertimento, ma decide di non farlo perché dovrebbe rivelare la propria posizione. La spada del primo Estraneo è di cristallo traslucido, affilata in modo inumano. Waymar riesce a parare i colpi finché la sua parata non arriva appena in ritardo e la lama dell'Estraneo gli taglia la maglia sotto il braccio. Waymar grida «Per Robert!» e carica, ma al contatto la sua lama si frantuma contro la spada dell'Estraneo. Una scheggia lo colpisce all'occhio sinistro ed egli cade in ginocchio, accecato. Gli Estranei si stringono intorno a lui e lo colpiscono senza pietà.",
+            "Will distoglie lo sguardo per lungo tempo; quando lo rivolge di nuovo, gli Estranei sono spariti. Scende dall'albero, esamina il corpo di Waymar e raccoglie la spada contorta e spezzata del cavaliere, decidendo di portarla ai comandanti e sperando che Gared sia ancora con i cavalli. Ma quando si rialza, Waymar si è alzato a sua volta e gli sta davanti. Il suo occhio rimasto è diventato blu. Con un tocco gelido, le mani di Waymar si chiudono intorno alla gola di Will."
+          ],
+          note: "Il Prologo introduce la minaccia soprannaturale (gli Estranei) prima della politica del titolo. Nota: Gared sconsiglia di avanzare e viene ignorato; Waymar mostra coraggio proprio all'ultimo.",
+          presenti: ["will", "gared", "waymar", "estranei"],
+          menzionati: ["robert"],
+          luoghi: ["foresta_infestata", "barriera"],
+          casate: [],
+          popoli: ["guardia_notte", "bruti"],
+          termini: []
+        },
+        {
+          n: 1, titolo: "Bran I", pov: "Bran Stark", luogo: "Colline a nord di Grande Inverno", pagina: "11 (US HC)",
+          url: "https://awoiaf.westeros.org/index.php/A_Game_of_Thrones-Chapter_1",
+          breve: "Lord Eddard Stark fa giustizia di un disertore della Guardia della Notte; sulla via del ritorno i suoi figli trovano sei cuccioli di metalupo.",
+          sinossi: [
+            "È il nono anno d'estate. Bran Stark, sette anni, viaggia con un gruppo di venti uomini, tra cui il padre, lord Eddard Stark, per assistere all'esecuzione di una condanna del re in un fortino sulle colline. È la prima volta che gli è permesso partecipare. Il fratello maggiore, Robb, pensa che il condannato sia un bruto fedele a Mance Rayder, il Re-oltre-la-Barriera, e questo fa tornare in mente a Bran i racconti della Vecchia Nan sui bruti.",
+            "Il colpevole si rivela un uomo anziano vestito dei neri stracci della Guardia della Notte, che ha perso le orecchie e un dito per il gelo. Lord Eddard lo interroga brevemente. Poi due guardie lo trascinano al ceppo di un albero di legno di ferro e Theon Greyjoy, pupillo di Eddard, porta a Eddard la sua spada di acciaio di Valyria, Ghiaccio. Eddard condanna l'uomo a morte per diserzione dalla Guardia della Notte e solleva la lama. Jon Snow, il fratello bastardo di Bran, gli ricorda di non distogliere lo sguardo, così Bran guarda il padre staccare la testa dell'uomo con un solo colpo. La testa rotola vicino a Theon, che ride e la calcia via. Jon sussurra che Theon è un asino e si complimenta con Bran per la compostezza mostrata durante l'esecuzione.",
+            "Sulla via del ritorno a Grande Inverno, Robb e Jon discutono se il disertore sia morto con coraggio, poi corrono con i cavalli fino al ponte, lasciando indietro Bran e il suo pony. Eddard li raggiunge e chiede a Bran se sappia perché ha eseguito personalmente la condanna. Bran risponde che l'uomo era un bruto. Eddard lo corregge: era un disertore. Poi spiega che i Primi Uomini, da cui discendono gli Stark, credevano che chi pronuncia la sentenza debba anche eseguirla, per non abituarsi a ordinare delle morti; gli Stark si attengono ancora a questo principio.",
+            "Jon grida da davanti perché vadano a vedere ciò che lui e Robb hanno trovato. Robb tiene qualcosa tra le braccia accanto al cadavere di un lupo più grande del pony di Bran. Jon riconosce correttamente un metalupo. Theon commenta che non se ne vedono a sud della Barriera da duecento anni. Bran nota che Robb sta cullando un cucciolo e, rassicurato da Robb, lo accarezza. Poi Jon gliene dà un altro.",
+            "Esaminando la madre morta, trovano un grosso frammento di corno di cervo conficcato nella gola. I soldati vi vedono un cattivo presagio. Theon si offre di uccidere i cuccioli, ma Bran protesta. Eddard dice dapprima che sarebbe meglio ucciderli, ma cambia idea quando Jon fa notare che i cuccioli sono cinque, uno per ciascuno dei figli legittimi di Eddard; poiché il metalupo è lo stemma degli Stark, devono essere destinati a loro. Bran capisce subito, come tutti gli altri, che il paragone regge solo perché Jon non rivendica un cucciolo per sé.",
+            "Robb e Bran dichiarano di essere disposti a nutrire i cuccioli a mano. Eddard precisa che i ragazzi devono nutrirli e allevarli di persona, senza affidarli ai servi, e trattarli bene, altrimenti diventeranno pericolosi. Robb e Bran promettono che non li lasceranno morire. Mentre si rimettono in cammino, Jon sente un rumore, torna indietro e scopre un sesto cucciolo, albino e dagli occhi rossi, che si era allontanato strisciando dalla madre. A Bran colpisce che sia l'unico ad aver già aperto gli occhi. Theon sostiene che l'albino morirà prima degli altri, ma Jon non è d'accordo e lo reclama per sé."
+          ],
+          note: "Il capitolo mostra la giustizia degli Stark («chi condanna, esegue»), introduce lo stemma del metalupo e il presagio del corno di cervo (stemma dei Baratheon) nella gola della lupa.",
+          presenti: ["bran", "eddard", "robb", "jon", "theon", "gared", "madre_metalupo"],
+          menzionati: ["mance", "vecchia_nan"],
+          luoghi: ["colline_nord", "grande_inverno", "barriera"],
+          casate: ["stark", "greyjoy", "baratheon"],
+          popoli: ["bruti", "primi_uomini", "guardia_notte"],
+          termini: ["ghiaccio", "metalupo", "acciaio_valyria"]
+        },
+        {
+          n: 2, titolo: "Catelyn I", pov: "Catelyn Stark", luogo: "Parco degli Dei di Grande Inverno", pagina: "18 (US HC)",
+          url: "https://awoiaf.westeros.org/index.php/A_Game_of_Thrones-Chapter_2",
+          breve: "Catelyn porta a Ned la notizia della morte di Jon Arryn e dell'imminente arrivo del re e della sua corte a Grande Inverno.",
+          sinossi: [
+            "Catelyn Stark cerca il marito Eddard nel parco degli dei, dopo il suo ritorno a Grande Inverno. Sa che Eddard va sempre lì dopo aver giustiziato un uomo. Trova il bosco buio e inquietante, a confronto con quello soleggiato che ricorda dalla casa della sua infanzia a Delta delle Acque. A differenza della Casa Tully, che segue la Fede dei Sette, gli Stark sono fedeli ai Vecchi Dei.",
+            "Catelyn trova Ned che lucida la sua spada ancestrale, Ghiaccio, sotto l'albero-cuore al centro del boschetto. Lui chiede dei figli e Catelyn risponde che stanno scegliendo i nomi per i nuovi lupi. Ned osserva che l'uomo giustiziato è il quarto disertore dell'anno. Aggiunge che era mezzo pazzo, che qualcosa gli aveva messo addosso una paura così profonda da non riuscire a raggiungerlo. La Guardia della Notte si sta assottigliando, ridotta a meno di mille uomini, non solo per le diserzioni ma anche per le perdite nelle esplorazioni. Un giorno Ned potrebbe dover convocare i suoi vassalli per combattere contro Mance Rayder in persona. Catelyn lo avverte che oltre la Barriera ci sono cose più oscure. Ned ribatte che gli Estranei sono morti da ottomila anni e che il maestro Luwin sostiene che non siano mai esistiti. Catelyn replica che nessuno aveva mai visto un metalupo fino a oggi.",
+            "Quando Ned le chiede perché sia venuta, Catelyn gli dice che Jon Arryn, suo padre adottivo e cognato di lei, è morto. La notizia è giunta di pugno del re Robert. Interrogata, spiega che la vedova di Jon Arryn, Lysa, sorella di Catelyn, è tornata con il figlio al Nido dell'Aquila, e che secondo lei la sorella non dovrebbe restare sola e avrebbe dovuto tornare a Delta delle Acque. Ned la esorta a portare i figli a tenerle compagnia, ma Catelyn gli comunica che Robert Baratheon ha scritto anche per annunciare che verrà a Grande Inverno. La notizia rallegra Ned: sono passati nove anni dall'ultima volta che ha visto il vecchio amico. Catelyn, però, è preoccupata per il presagio del metalupo trovato morto nella neve con un corno di cervo nella gola.",
+            "Con l'arrivo di Robert, Catelyn e Ned convengono di mandare un messaggio al fratello di lui, Benjen, sulla Barriera. Poi Catelyn lo informa che verranno anche la moglie di Robert, la regina Cersei Lannister, i loro figli e i fratelli Lannister di lei. A Ned i Lannister non piacciono, perché si sono uniti alla causa di Robert solo quando la vittoria era certa. Eddard è contento di rivedere i bambini e poi manifesta la sua preoccupazione su come sfamare tutti."
+          ],
+          note: "Prima apparizione di Catelyn. Vengono posti la morte di Jon Arryn, l'arrivo del re e il parallelo tra il metalupo morto e il corno di cervo.",
+          presenti: ["catelyn", "eddard"],
+          menzionati: ["jon_arryn", "lysa", "robert", "benjen", "cersei", "luwin", "mance"],
+          luoghi: ["parco_degli_dei", "grande_inverno", "delta_acque", "nido_aquila", "barriera"],
+          casate: ["stark", "tully", "arryn", "lannister", "baratheon"],
+          popoli: ["guardia_notte", "estranei"],
+          termini: ["albero_cuore", "ghiaccio", "vecchi_dei", "fede_sette", "metalupo"]
+        },
+        {
+          n: 3, titolo: "Daenerys I", pov: "Daenerys Targaryen", luogo: "Pentos", pagina: "23 (US HC)",
+          url: "https://awoiaf.westeros.org/index.php/A_Game_of_Thrones-Chapter_3",
+          breve: "L'esule principessa Daenerys viene preparata per essere presentata al khal Drogo, mentre il fratello Viserys spera di ottenere un esercito dothraki.",
+          sinossi: [
+            "Da mezzo anno l'esule pretendente Viserys Targaryen e la sorella tredicenne, la principessa Daenerys Targaryen, vivono nella dimora di Illyrio Mopatis, magister della città libera di Pentos. Viserys vuole riconquistare il Trono di Spade che fu di suo padre e ha bisogno di un esercito, che spera di ottenere con un'alleanza matrimoniale con un khal dothraki a capo di un grande khalasar.",
+            "Viserys porta a Daenerys un dono del magister Illyrio, un bell'abito di seta. Daenerys deve apparire come la principessa che è, perché il khal Drogo ne chieda la mano. Daenerys dubita dei motivi di Illyrio, ma Viserys insiste che il magister voglia solo guadagnarsi la sua benevolenza. Per paura di far arrabbiare il fratello (cosa che lui chiama «svegliare il drago»), Daenerys tace la propria diffidenza. Viserys la avverte di non deluderlo e, per sottolineare la minaccia, le torce un capezzolo. Secondo Viserys, quando si scriverà la storia del suo regno, si dirà che il suo regno è iniziato quella notte.",
+            "Viserys se ne va, lasciando Daenerys sola con i suoi pensieri. Lei teme il banchetto di quella sera e la sua mente corre a Westeros, la patria che non ha mai visto. Fu concepita poco prima che la madre, la regina Rhaella Targaryen, fuggisse da Approdo del Re con Viserys, e nacque nove mesi dopo a Roccia del Drago. Conosce però i racconti di Viserys: la fuga da Approdo del Re a Roccia del Drago; il fratello maggiore, il principe Rhaegar Targaryen, morto in battaglia contro Robert Baratheon al Tridente; il Saccheggio di Approdo del Re, la morte atroce del principe Aegon Targaryen e l'uccisione del padre, re Aerys II Targaryen, nella sala del trono, per mano di un cavaliere della sua stessa Guardia Reale.",
+            "Nove mesi dopo la morte del fratello e del padre, la madre morì nel darla alla luce, durante una tempesta estiva che distrusse gran parte della flotta Targaryen, ultima difesa di Roccia del Drago (cosa che Viserys non le ha mai perdonato). Quando la guarnigione di Roccia del Drago era pronta a consegnare Viserys e Daenerys a Stannis Baratheon, in arrivo per prendere l'isola, ser Willem Darry e quattro uomini fedeli li portarono in segreto a Braavos. Là vissero in una grande casa con la porta rossa. Ma Willem morì, lasciandoli senza tutore, e i servi rubarono il denaro rimasto. Poco dopo i due vennero cacciati dalla casa e iniziarono a spostarsi di città in città, senza fermarsi mai a lungo, perché Viserys temeva gli assassini dell'Usurpatore. Daenerys ricorda come ricchi mercanti, arconti e magister fossero sempre meno disposti a ospitare i Targaryen col passare degli anni, e come Viserys sia stato costretto a vendere la corona della madre. Nonostante la mancanza di appoggi, Viserys è ossessionato dal riprendersi il Trono di Spade. Daenerys sa che alle sue spalle lo chiamano «il re mendicante» e si chiede se anche a lei abbiano dato un soprannome.",
+            "I servi di Illyrio vengono a lavarla e prepararla per il banchetto offerto nella dimora di Drogo, dove dovrà conoscere e colpire il khal, perché ne chieda la mano. I servi le dicono quanto è fortunata a sposare un uomo così ricco che persino i suoi schiavi portano collari d'oro. Quando è vestita a dovere, il fratello torna con il magister Illyrio e le ordina di alzarsi e girarsi. Illyrio la ricopre di complimenti, mentre Viserys si lamenta che sia troppo magra e troppo giovane. Illyrio lo rassicura: è abbastanza grande per il khal, e ne ammira i capelli argento-oro e gli occhi viola, marchio dell'antica nobiltà valyriana. Quando Viserys osserva che i barbari hanno gusti bizzarri come ragazzi e pecore, Illyrio lo avverte di non dire certe cose al khal Drogo, e negli occhi di Viserys balena la rabbia.",
+            "I tre viaggiano nella lettiga di Illyrio fino alla dimora di Drogo nel buio più fitto. Viserys afferma che diecimila «urlatori» dothraki basteranno a rovesciare l'Usurpatore, uniti a quelli che a Westeros attendono il suo ritorno. Fa congetture su chi si unirebbe alla causa: Casa Tyrell, Casa Redwyne, Casa Darry, Casa Greyjoy e i dorniani. Illyrio assicura a Viserys che nei Sette Regni la gente attende in segreto il suo ritorno, anche se Daenerys ne dubita.",
+            "Illyrio dice che la dimora di Drogo è un dono dei magister di Pentos, per conquistarne l'amicizia. Arrivano alla villa e vengono annunciati come re Viserys III e la principessa Daenerys. Illyrio indica alcuni ospiti illustri, tra cui ser Jorah Mormont, fuggito alcuni anni prima dai Sette Regni sotto condanna a morte e da allora spesso tra i dothraki. Poi Illyrio indica lo stesso khal Drogo, aggraziato come una pantera e più giovane di quanto Daenerys si aspettasse. Viserys nota la lunga treccia, che significa che non è mai stato sconfitto in combattimento. Daenerys nota solo il suo volto freddo e duro, e ne ha paura. Chiede di tornare a casa, provocando una sfuriata di Viserys sul fatto che la loro casa è stata loro portata via. Daenerys intendeva solo le sue stanze nella tenuta di Illyrio, ma nessuno dei luoghi in cui hanno vissuto è mai stato la casa di Viserys. Viserys le assicura inoltre che lascerebbe stuprare lei da tutto il khalasar di Drogo, cavalli compresi, se ciò gli restituisse i Sette Regni. Poi le dice di smettere di piangere, perché Illyrio sta conducendo Drogo da loro. Daenerys smette di piangere, si raddrizza e sorride."
+          ],
+          note: "Primo capitolo fuori da Westeros: la storia dei Targaryen in esilio e il piano di Viserys. Dettagli utili: il «drago» che Viserys non deve svegliare, il soprannome «re mendicante», la treccia di Drogo.",
+          presenti: ["daenerys", "viserys", "illyrio", "drogo", "jorah"],
+          menzionati: ["rhaella", "rhaegar", "aegon", "aerys", "robert", "stannis", "willem_darry"],
+          luoghi: ["pentos", "westeros", "roccia_drago", "braavos", "approdo", "tridente"],
+          casate: ["targaryen", "baratheon", "tyrell", "redwyne", "darry", "greyjoy", "mormont"],
+          popoli: ["dothraki", "valyriani", "dorniani", "guardia_reale"],
+          termini: ["khalasar", "magister", "saccheggio_approdo", "ribellione_robert"]
+        },
+        {
+          n: 4, titolo: "Eddard I", pov: "Eddard Stark", luogo: "Grande Inverno", pagina: "33 (US HC)",
+          url: "https://awoiaf.westeros.org/index.php/A_Game_of_Thrones-Chapter_4",
+          breve: "Re Robert arriva a Grande Inverno, offre a Eddard il posto di Primo Cavaliere e propone un fidanzamento tra Sansa e Joffrey.",
+          sinossi: [
+            "Il seguito del re, trecento persone, entra a cavallo a Grande Inverno. Eddard riconosce ser Jaime Lannister, Tyrion Lannister, il principe Joffrey Baratheon e Sandor Clegane, ma non riconosce il vecchio amico re Robert finché questi non lo chiama. Eddard è sconvolto nel vedere che Robert è ingrassato di otto stone (112 libbre) da quando si sono visti l'ultima volta, nove anni prima, durante la Ribellione di Greyjoy. Eddard rende omaggio mentre la regina Cersei e i figli minori scendono dalla carrozza. Dopo i convenevoli, con le presentazioni dei figli di entrambe le parti, Robert insiste per essere condotto nelle cripte di Grande Inverno, dove riposano i morti della Casa Stark, per rendere omaggio alla sorella di Eddard. La regina Cersei obietta, ma Robert la ignora e il fratello gemello la allontana discretamente.",
+            "Ned chiede a Robert del viaggio e Robert si lamenta della distanza da percorrere nell'immenso vuoto del nord. Poi descrive i vantaggi di vivere al sud, dicendo a Ned che deve vederne le meraviglie, il calore e le donne poco vestite.",
+            "Scendono nella cripta, impresa faticosa per Robert, fuori forma. Vuole visitare la tomba della sorella di Ned, Lyanna Stark, che era la sua promessa sposa. Passano davanti ai morti della Casa Stark, con le statue davanti alle tombe, ciascun lord con una spada in grembo e un metalupo ai piedi. Arrivano all'ultima delle cripte occupate. Qui ci sono tre tombe, per il padre di Ned, Rickard, per il fratello maggiore Brandon e per la sorella Lyanna. Robert dichiara che Ned avrebbe dovuto seppellire Lyanna su una collina soleggiata, ma Ned spiega che era una Stark di Grande Inverno e che il suo posto è lì, come lei desiderava. Ned ricorda la morte di lei, con solo lui e l'amico Howland Reed vicini, mentre Robert ricorda la vendetta su Rhaegar Targaryen per ciò che ha fatto a Lyanna, rammaricandosi di averlo potuto uccidere una volta sola. Ned propone di tornare in superficie, dove li attende la moglie di Robert. Robert risponde che gli Estranei possono prendersi sua moglie, ma si avviano comunque.",
+            "Mentre tornano, Ned chiede di Jon Arryn e Robert dichiara di non aver mai visto un uomo morire così in fretta: da sano a morto nel giro di quindici giorni. Ned chiede come stia sopportando il lutto la vedova Lysa, spiegando che Catelyn teme per la sorella. Robert confida di pensare che la morte di Jon abbia fatto impazzire Lysa e che questa abbia riportato il figlio, Robert Arryn, al Nido dell'Aquila. Robert aveva sperato di mandare il ragazzo malaticcio a fare da pupillo a Tywin Lannister, ma Lysa non ne ha voluto sapere ed è partita nel cuore della notte; Cersei era furiosa. Ned, che non si fida di Tywin, è sollevato. Ned chiede di poter prendere lui stesso Robert Arryn come pupillo, ma Tywin ha già accettato e Ned che lo prendesse come pupillo sarebbe un insulto per Tywin.",
+            "Ned osserva che Robert dovrebbe visitare la Barriera, ma Robert risponde di avere preoccupazioni più importanti, come sostituire lord Arryn, che ricopriva diversi incarichi importanti, tra cui quello di Guardiano dell'Est. Ned ricorda a Robert che quel titolo spetta per tradizione ai domini della Casa Arryn, ma Robert dichiara che non nominerà Guardiano dell'Est il piccolo Robert Arryn, di soli sei anni,. Ned fa notare che in tempo di pace il titolo è solo un onore. Il re non è contento: il figlio non è il padre, anche se magari, quando il ragazzo sarà cresciuto, il titolo gli verrà restituito. Robert dice di aver bisogno anche di un nuovo Primo Cavaliere del Re e offre il posto a Ned perché possano lavorare di nuovo insieme. Poi racconta a Ned quanto i doveri lo annoino e si lamenta di essere circondato da adulatori e sciocchi. Insiste che vuole Ned a sud, ad Approdo del Re, come Primo Cavaliere, il secondo uomo più importante del regno.",
+            "Ned non vuole il posto e cerca di dichiararsi indegno dell'onore. Robert risponde scherzando che non vuole onorare Ned ma farsi governare il regno da lui, citando il detto popolare per cui «il re mangia e il Primo Cavaliere caga». Robert chiede almeno un sorriso, ma Ned risponde che si dice che nel Nord faccia così freddo che la risata di un uomo gli si gela in gola e lo soffoca.",
+            "Re Robert propone anche di dare in sposa a Sansa Stark, undici anni, figlia di Ned, suo figlio, il principe Joffrey, per unire le Case Stark e Baratheon come dovevano fare lui e Lyanna. Ned esita a decidere, desiderando parlare con la moglie, ma Robert gli chiede di non metterci troppo. Ned è colmo di un senso di presagio, sapendo che Grande Inverno è il suo posto e che l'inverno sta arrivando."
+          ],
+          note: "L'arrivo della corte. Elementi chiave: la richiesta di diventare Primo Cavaliere, la proposta di matrimonio Sansa–Joffrey, la fiducia di Ned in Robert contrapposta al suo timore per i Lannister.",
+          presenti: ["eddard", "robert", "cersei", "jaime", "tyrion", "joffrey", "sandor"],
+          menzionati: ["lyanna", "rickard", "brandon", "rhaegar", "howland", "jon_arryn", "lysa", "catelyn", "robert_arryn", "tywin", "sansa"],
+          luoghi: ["grande_inverno", "cripte", "approdo", "nido_aquila", "barriera"],
+          casate: ["stark", "baratheon", "lannister", "arryn"],
+          popoli: ["estranei"],
+          termini: ["primo_cavaliere", "guardiano_est", "ribellione_greyjoy", "ribellione_robert"]
+        },
+        {
+          n: 5, titolo: "Jon I", pov: "Jon Snow", luogo: "Grande Inverno", pagina: "",
+          url: "https://awoiaf.westeros.org/index.php/A_Game_of_Thrones-Chapter_5",
+          breve: "Al banchetto per la visita del re, Jon parla con lo zio Benjen e con Tyrion Lannister.",
+          sinossi: [
+            "A Grande Inverno si tiene un banchetto in onore della visita di re Robert I Baratheon. Jon decide di essere grato che la sua condizione di bastardo lo abbia relegato in fondo alla sala, con gli scudieri più giovani, invece che al tavolo della famiglia del re. Qui può bere quanto vuole (ha la sete di un uomo) e mescolarsi liberamente con chi gli sta intorno.",
+            "Jon osserva il re e la sua famiglia mentre entrano. Riconosce il falso sorriso della regina Cersei ed è deluso da re Robert, grasso e rosso in viso. La principessa Myrcella, otto anni, sembra presa dal suo accompagnatore, Robb Stark, e Jon la giudica insulsa. Arya Stark è accompagnata dal grassoccio e giovane principe Tommen Baratheon. Il principe ereditario, il dodicenne Joffrey Baratheon (più alto persino di Robb), accompagna la radiosa Sansa Stark. A Jon non piacciono le labbra imbronciate di Joffrey né il disprezzo che il principe sembra nutrire per Grande Inverno. Nota anche che il fratello della regina, ser Jaime Lannister, sembra un vero re, e che il nano Tyrion Lannister, che avanza ondeggiando, è grottescamente affascinante, tanto brutto quanto Jaime e Cersei sono belli. Gli ultimi a entrare sono Benjen Stark e Theon Greyjoy.",
+            "Jon dà da mangiare al suo metalupo, Spettro, sotto il tavolo e lo osserva tenere testa in silenzio a un cane adulto tre volte più grande di lui. Portare il lupo al banchetto è un altro vantaggio dell'essere il bastardo. Presto Jon è raggiunto dallo zio Benjen, che gli chiede quanto abbia bevuto, aggiungendo che Jon è più grande di quando lui si ubriacò davvero per la prima volta. Benjen chiede di Spettro e Jon spiega di averlo chiamato così per il colore bianco e perché non fa mai un rumore. Poi Benjen chiede perché Jon non sia al tavolo principale e Jon risponde secco che lady Catelyn ha pensato che far sedere un bastardo col re potesse offenderlo.",
+            "Benjen osserva che Eddard non sembra in vena di festeggiare e Jon aggiunge che nemmeno la regina, probabilmente per la visita di re Robert alle cripte di Grande Inverno. Benjen elogia l'acutezza di Jon e osserva che alla Barriera gli servirebbe un uomo come lui. Jon chiede se può tornare alla Barriera con Benjen. Lo zio risponde che la Barriera è un luogo duro per un ragazzo, ma Jon ribatte che alla prossima festa del suo nome compirà quindici anni e che si dice che i bastardi crescano più in fretta dei nati in nozze. Jon pensa a come tutti i suoi fratellastri e sorellastre abbiano un futuro, mentre per un bastardo non c'è futuro. Benjen dice che dovrebbe prima conoscere una donna e generare uno o due bastardi, per sapere a cosa rinuncerà. Questo fa arrabbiare Jon, che dichiara che non genererà mai un bastardo e corre via con Spettro alle calcagna prima che qualcuno lo veda piangere.",
+            "Mentre se ne va, Tyrion Lannister gli parla da una sporgenza nel cortile deserto e chiede se può dare un'occhiata a Spettro. Jon si offre di aiutarlo a scendere, ma Tyrion salta giù, atterrando acrobaticamente sulle mani e rimettendosi in piedi con un balzo. Spettro è incerto riguardo a Tyrion, ma si sottopone all'esame per ordine di Jon. Tyrion chiede se Jon sia il bastardo di Eddard. Jon si irrigidisce e Tyrion si scusa dicendo che, essendo un nano, di solito può parlare come gli pare, come un giullare. Commenta che Jon sembra avere più del nord in sé dei suoi fratellastri. Tyrion consiglia a Jon di non dimenticare mai chi e cosa è, in modo che nessuno possa usarlo contro di lui. Quando Jon gli chiede che cosa potrebbe saperne lui dell'essere bastardo, Tyrion risponde che tutti i nani sono bastardi agli occhi del padre e che, sebbene tutti i nani siano bastardi, non tutti i bastardi devono essere nani."
+          ],
+          note: "Prima voce di Jon: il suo desiderio di unirsi alla Guardia della Notte e il consiglio di Tyrion («non dimenticare mai chi sei»). Il banchetto introduce quasi tutti i figli del re e degli Stark.",
+          presenti: ["jon", "spettro", "benjen", "tyrion", "robert", "cersei", "jaime", "joffrey", "myrcella", "tommen", "sansa", "arya", "robb", "theon", "eddard"],
+          menzionati: ["catelyn"],
+          luoghi: ["grande_inverno", "sala_grande", "cripte", "barriera"],
+          casate: ["stark", "lannister", "baratheon", "greyjoy"],
+          popoli: ["guardia_notte"],
+          termini: ["metalupo", "bastardo"]
         }
-      };
-      reader.readAsText(file);
-    };
+      ]
+    }
+  ],
+  entita: [
+    /* ---- Personaggi ---- */
+    { id: "will", tipo: "personaggio", nome: "Will", en: "Will", descr: "Esploratore della Guardia della Notte, protagonista del Prologo. Discreto e prudente, osserva dall'alto di un albero." },
+    { id: "gared", tipo: "personaggio", nome: "Gared", en: "Gared", descr: "Anziano confratello della Guardia della Notte, da decenni sulla Barriera. Diffida della foresta infestata." },
+    { id: "waymar", tipo: "personaggio", nome: "Waymar Royce", en: "Waymar Royce", alias: ["ser Waymar"], descr: "Giovane cavaliere di diciotto anni e di nobile nascita, in servizio alla Guardia della Notte. Ha il comando nella sua prima esplorazione." },
+    { id: "eddard", tipo: "personaggio", nome: "Eddard Stark", en: "Eddard Stark", alias: ["Ned", "lord Eddard"], wiki: "https://awoiaf.westeros.org/index.php/Eddard_Stark", descr: "Lord di Grande Inverno e Guardiano del Nord. Marito di Catelyn, padre di cinque figli legittimi e vecchio amico di re Robert." },
+    { id: "catelyn", tipo: "personaggio", nome: "Catelyn Stark", en: "Catelyn Stark", alias: ["Catelyn Tully", "lady Catelyn"], wiki: "https://awoiaf.westeros.org/index.php/Catelyn_Stark", descr: "Moglie di Eddard Stark, nata Tully. Segue la Fede dei Sette e si sente a disagio nel parco degli dei di Grande Inverno." },
+    { id: "bran", tipo: "personaggio", nome: "Bran Stark", en: "Bran Stark", alias: ["Brandon"], wiki: "https://awoiaf.westeros.org/index.php/Bran_Stark", descr: "Secondo figlio maschio legittimo di Eddard, sette anni. Ammesso per la prima volta a un'esecuzione." },
+    { id: "robb", tipo: "personaggio", nome: "Robb Stark", en: "Robb Stark", wiki: "https://awoiaf.westeros.org/index.php/Robb_Stark", descr: "Figlio maggiore ed erede di Eddard e Catelyn." },
+    { id: "jon", tipo: "personaggio", nome: "Jon Snow", en: "Jon Snow", alias: ["il bastardo di Grande Inverno"], wiki: "https://awoiaf.westeros.org/index.php/Jon_Snow", descr: "Figlio bastardo di Eddard Stark, quattordici anni. Sogna di unirsi alla Guardia della Notte." },
+    { id: "theon", tipo: "personaggio", nome: "Theon Greyjoy", en: "Theon Greyjoy", wiki: "https://awoiaf.westeros.org/index.php/Theon_Greyjoy", descr: "Pupillo di Eddard Stark a Grande Inverno, appartenente alla Casa Greyjoy." },
+    { id: "spettro", tipo: "personaggio", nome: "Spettro", en: "Ghost", alias: ["il metalupo di Jon"], wiki: "https://awoiaf.westeros.org/index.php/Ghost", descr: "Cucciolo albino di metalupo dagli occhi rossi, scelto da Jon Snow; non emette mai un suono." },
+    { id: "madre_metalupo", tipo: "personaggio", nome: "La madre metalupo", en: "Direwolf Mother", wiki: "https://awoiaf.westeros.org/index.php/Direwolf_Mother", descr: "Metalupo trovato morto nella neve, con un frammento di corno di cervo nella gola; i suoi cuccioli vengono adottati dagli Stark." },
+    { id: "robert", tipo: "personaggio", nome: "Robert Baratheon", en: "Robert I Baratheon", alias: ["re Robert", "l'Usurpatore"], wiki: "https://awoiaf.westeros.org/index.php/Robert_I_Baratheon", descr: "Re dei Sette Regni, vecchio amico di Eddard Stark. Ingrassato e annoiato dalle responsabilità del trono." },
+    { id: "cersei", tipo: "personaggio", nome: "Cersei Lannister", en: "Cersei Lannister", alias: ["la regina"], wiki: "https://awoiaf.westeros.org/index.php/Cersei_Lannister", descr: "Regina dei Sette Regni, moglie di Robert e sorella gemella di Jaime Lannister." },
+    { id: "jaime", tipo: "personaggio", nome: "Jaime Lannister", en: "Jaime Lannister", alias: ["lo Sterminatore di Re"], wiki: "https://awoiaf.westeros.org/index.php/Jaime_Lannister", descr: "Cavaliere della Guardia Reale, fratello gemello della regina Cersei." },
+    { id: "tyrion", tipo: "personaggio", nome: "Tyrion Lannister", en: "Tyrion Lannister", alias: ["il Folletto"], wiki: "https://awoiaf.westeros.org/index.php/Tyrion_Lannister", descr: "Fratello minore di Cersei e Jaime; nano, arguto e dalla lingua tagliente." },
+    { id: "joffrey", tipo: "personaggio", nome: "Joffrey Baratheon", en: "Joffrey Baratheon", wiki: "https://awoiaf.westeros.org/index.php/Joffrey_Baratheon", descr: "Dodicenne principe ereditario, primogenito del re e della regina." },
+    { id: "myrcella", tipo: "personaggio", nome: "Myrcella Baratheon", en: "Myrcella Baratheon", wiki: "https://awoiaf.westeros.org/index.php/Myrcella_Baratheon", descr: "Principessa di otto anni, figlia di Robert e Cersei." },
+    { id: "tommen", tipo: "personaggio", nome: "Tommen Baratheon", en: "Tommen Baratheon", wiki: "https://awoiaf.westeros.org/index.php/Tommen_Baratheon", descr: "Il più giovane dei figli del re, grassoccio e giovane." },
+    { id: "sandor", tipo: "personaggio", nome: "Sandor Clegane", en: "Sandor Clegane", wiki: "https://awoiaf.westeros.org/index.php/Sandor_Clegane", descr: "Guerriero al seguito del re, riconosciuto da Eddard al suo arrivo." },
+    { id: "sansa", tipo: "personaggio", nome: "Sansa Stark", en: "Sansa Stark", wiki: "https://awoiaf.westeros.org/index.php/Sansa_Stark", descr: "Figlia di Eddard e Catelyn, undici anni; Robert propone di darla in sposa a Joffrey." },
+    { id: "arya", tipo: "personaggio", nome: "Arya Stark", en: "Arya Stark", wiki: "https://awoiaf.westeros.org/index.php/Arya_Stark", descr: "Figlia minore di Eddard e Catelyn tra le femmine." },
+    { id: "benjen", tipo: "personaggio", nome: "Benjen Stark", en: "Benjen Stark", wiki: "https://awoiaf.westeros.org/index.php/Benjen_Stark", descr: "Fratello di Eddard, membro della Guardia della Notte." },
+    { id: "mance", tipo: "personaggio", nome: "Mance Rayder", en: "Mance Rayder", alias: ["il Re-oltre-la-Barriera"], wiki: "https://awoiaf.westeros.org/index.php/Mance_Rayder", descr: "Capo dei bruti, chiamato il Re-oltre-la-Barriera. In questi capitoli è solo nominato." },
+    { id: "vecchia_nan", tipo: "personaggio", nome: "Vecchia Nan", en: "Old Nan", descr: "Anziana serva di Grande Inverno che racconta storie ai bambini Stark." },
+    { id: "luwin", tipo: "personaggio", nome: "Maestro Luwin", en: "Maester Luwin", descr: "Maestro di Grande Inverno; secondo lui gli Estranei non sono mai esistiti." },
+    { id: "jon_arryn", tipo: "personaggio", nome: "Jon Arryn", en: "Jon Arryn", wiki: "https://awoiaf.westeros.org/index.php/Jon_Arryn", descr: "Primo Cavaliere del Re, defunto; tutore di Eddard e Robert. Era sposato con Lysa Tully." },
+    { id: "lysa", tipo: "personaggio", nome: "Lysa Arryn", en: "Lysa Arryn", alias: ["Lysa Tully"], wiki: "https://awoiaf.westeros.org/index.php/Lysa_Arryn", descr: "Sorella di Catelyn e vedova di Jon Arryn; si è ritirata al Nido dell'Aquila con il figlio." },
+    { id: "robert_arryn", tipo: "personaggio", nome: "Robert Arryn", en: "Robert Arryn", wiki: "https://awoiaf.westeros.org/index.php/Robert_Arryn", descr: "Figlio malaticcio di Jon e Lysa Arryn, sei anni." },
+    { id: "tywin", tipo: "personaggio", nome: "Tywin Lannister", en: "Tywin Lannister", wiki: "https://awoiaf.westeros.org/index.php/Tywin_Lannister", descr: "Lord della Casa Lannister, padre di Cersei, Jaime e Tyrion. Eddard non si fida di lui." },
+    { id: "lyanna", tipo: "personaggio", nome: "Lyanna Stark", en: "Lyanna Stark", wiki: "https://awoiaf.westeros.org/index.php/Lyanna_Stark", descr: "Sorella di Eddard, promessa sposa di Robert; sepolta nelle cripte di Grande Inverno." },
+    { id: "rickard", tipo: "personaggio", nome: "Rickard Stark", en: "Rickard Stark", wiki: "https://awoiaf.westeros.org/index.php/Rickard_Stark", descr: "Padre di Eddard, Brandon, Lyanna e Benjen; sepolto nelle cripte." },
+    { id: "brandon", tipo: "personaggio", nome: "Brandon Stark", en: "Brandon Stark (figlio di Rickard)", wiki: "https://awoiaf.westeros.org/index.php/Brandon_Stark", descr: "Fratello maggiore di Eddard, morto; sepolto nelle cripte." },
+    { id: "howland", tipo: "personaggio", nome: "Howland Reed", en: "Howland Reed", wiki: "https://awoiaf.westeros.org/index.php/Howland_Reed", descr: "Amico di Eddard, presente quando morì Lyanna." },
+    { id: "rhaegar", tipo: "personaggio", nome: "Rhaegar Targaryen", en: "Rhaegar Targaryen", wiki: "https://awoiaf.westeros.org/index.php/Rhaegar_Targaryen", descr: "Principe ereditario Targaryen, fratello maggiore di Viserys e Daenerys; ucciso da Robert al Tridente." },
+    { id: "daenerys", tipo: "personaggio", nome: "Daenerys Targaryen", en: "Daenerys Targaryen", alias: ["Dany"], wiki: "https://awoiaf.westeros.org/index.php/Daenerys_Targaryen", descr: "Principessa Targaryen in esilio, tredici anni, nata a Roccia del Drago. Capelli argento-oro e occhi viola." },
+    { id: "viserys", tipo: "personaggio", nome: "Viserys Targaryen", en: "Viserys Targaryen", alias: ["il re mendicante"], wiki: "https://awoiaf.westeros.org/index.php/Viserys_Targaryen", descr: "Fratello di Daenerys e pretendente al Trono di Spade; ossessionato dal riconquistarlo." },
+    { id: "illyrio", tipo: "personaggio", nome: "Illyrio Mopatis", en: "Illyrio Mopatis", wiki: "https://awoiaf.westeros.org/index.php/Illyrio_Mopatis", descr: "Magister di Pentos che ospita i Targaryen; promotore del matrimonio con Drogo." },
+    { id: "drogo", tipo: "personaggio", nome: "Khal Drogo", en: "Drogo", wiki: "https://awoiaf.westeros.org/index.php/Drogo", descr: "Khal dothraki a capo di un grande khalasar, mai sconfitto in battaglia (la lunga treccia)." },
+    { id: "jorah", tipo: "personaggio", nome: "Jorah Mormont", en: "Jorah Mormont", wiki: "https://awoiaf.westeros.org/index.php/Jorah_Mormont", descr: "Cavaliere fuggito dai Sette Regni sotto condanna a morte, da anni tra i dothraki." },
+    { id: "rhaella", tipo: "personaggio", nome: "Rhaella Targaryen", en: "Rhaella Targaryen", wiki: "https://awoiaf.westeros.org/index.php/Rhaella_Targaryen", descr: "Regina, madre di Viserys e Daenerys; morì dando alla luce Daenerys." },
+    { id: "aegon", tipo: "personaggio", nome: "Aegon Targaryen (principe)", en: "Aegon Targaryen (son of Rhaegar)", descr: "Figlio di Rhaegar, ucciso durante il Saccheggio di Approdo del Re." },
+    { id: "aerys", tipo: "personaggio", nome: "Aerys II Targaryen", en: "Aerys II Targaryen", alias: ["il Re Folle"], wiki: "https://awoiaf.westeros.org/index.php/Aerys_II_Targaryen", descr: "Ultimo re Targaryen, padre di Rhaegar, Viserys e Daenerys; ucciso da un cavaliere della sua Guardia Reale." },
+    { id: "stannis", tipo: "personaggio", nome: "Stannis Baratheon", en: "Stannis Baratheon", wiki: "https://awoiaf.westeros.org/index.php/Stannis_Baratheon", descr: "Fratello di Robert, mandato a prendere Roccia del Drago." },
+    { id: "willem_darry", tipo: "personaggio", nome: "Willem Darry", en: "Willem Darry", descr: "Ser Willem Darry portò in salvo Viserys e Daenerys a Braavos; morì lasciandoli senza tutore." },
+    /* ---- Luoghi ---- */
+    { id: "foresta_infestata", tipo: "luogo", nome: "Foresta infestata", en: "Haunted forest", wiki: "https://awoiaf.westeros.org/index.php/Haunted_forest", descr: "Foresta a nord della Barriera in cui si svolge il Prologo." },
+    { id: "barriera", tipo: "luogo", nome: "La Barriera", en: "The Wall", wiki: "https://awoiaf.westeros.org/index.php/The_Wall", descr: "Immensa muraglia di ghiaccio a nord dei Sette Regni, difesa dalla Guardia della Notte." },
+    { id: "grande_inverno", tipo: "luogo", nome: "Grande Inverno", en: "Winterfell", wiki: "https://awoiaf.westeros.org/index.php/Winterfell", descr: "Castello e sede della Casa Stark, nel Nord." },
+    { id: "colline_nord", tipo: "luogo", nome: "Fortino sulle colline", en: "Holdfast in the hills", wiki: "https://awoiaf.westeros.org/index.php/Holdfast_in_the_hills", descr: "Piccola fortificazione a nord di Grande Inverno, dove Eddard esegue la condanna." },
+    { id: "parco_degli_dei", tipo: "luogo", nome: "Parco degli Dei di Grande Inverno", en: "Godswood of Winterfell", wiki: "https://awoiaf.westeros.org/index.php/Godswood_of_Winterfell", descr: "Bosco sacro del castello, con l'albero-cuore al centro." },
+    { id: "cripte", tipo: "luogo", nome: "Cripte di Grande Inverno", en: "Crypts of Winterfell", wiki: "https://awoiaf.westeros.org/index.php/Crypts_of_Winterfell", descr: "Sepolcro dei lord Stark, con le statue dei morti, ciascuno con una spada in grembo e un metalupo ai piedi." },
+    { id: "sala_grande", tipo: "luogo", nome: "Sala Grande di Grande Inverno", en: "Great Hall of Winterfell", wiki: "https://awoiaf.westeros.org/index.php/Great_Hall_of_Winterfell", descr: "Dove si tiene il banchetto per la visita del re." },
+    { id: "delta_acque", tipo: "luogo", nome: "Delta delle Acque", en: "Riverrun", wiki: "https://awoiaf.westeros.org/index.php/Riverrun", descr: "Sede della Casa Tully, casa d'infanzia di Catelyn." },
+    { id: "nido_aquila", tipo: "luogo", nome: "Nido dell'Aquila", en: "The Eyrie", wiki: "https://awoiaf.westeros.org/index.php/The_Eyrie", descr: "Fortezza della Casa Arryn, dove si è ritirata Lysa." },
+    { id: "approdo", tipo: "luogo", nome: "Approdo del Re", en: "King's Landing", wiki: "https://awoiaf.westeros.org/index.php/King%27s_Landing", descr: "Capitale dei Sette Regni, sede del Trono di Spade." },
+    { id: "pentos", tipo: "luogo", nome: "Pentos", en: "Pentos", wiki: "https://awoiaf.westeros.org/index.php/Pentos", descr: "Città libera al di là del mare Stretto, dove vivono Viserys e Daenerys." },
+    { id: "westeros", tipo: "luogo", nome: "Westeros", en: "Westeros", wiki: "https://awoiaf.westeros.org/index.php/Westeros", descr: "Il continente dei Sette Regni, patria mai vista da Daenerys." },
+    { id: "roccia_drago", tipo: "luogo", nome: "Roccia del Drago", en: "Dragonstone", wiki: "https://awoiaf.westeros.org/index.php/Dragonstone", descr: "Isola-fortezza dove nacque Daenerys." },
+    { id: "braavos", tipo: "luogo", nome: "Braavos", en: "Braavos", wiki: "https://awoiaf.westeros.org/index.php/Braavos", descr: "Città libera dove i due Targaryen vissero in una casa con la porta rossa." },
+    { id: "tridente", tipo: "luogo", nome: "Il Tridente", en: "The Trident", wiki: "https://awoiaf.westeros.org/index.php/Trident", descr: "Fiume presso cui Robert uccise Rhaegar in battaglia." },
+    /* ---- Casate ---- */
+    { id: "stark", tipo: "casata", nome: "Casa Stark", en: "House Stark", wiki: "https://awoiaf.westeros.org/index.php/House_Stark", descr: "Casata dei lord di Grande Inverno e Guardiani del Nord. Stemma: metalupo grigio su campo bianco. Motto: «L'inverno sta arrivando»." },
+    { id: "lannister", tipo: "casata", nome: "Casa Lannister", en: "House Lannister", wiki: "https://awoiaf.westeros.org/index.php/House_Lannister", descr: "Potente casata, imparentata con il re tramite la regina Cersei." },
+    { id: "baratheon", tipo: "casata", nome: "Casa Baratheon", en: "House Baratheon", wiki: "https://awoiaf.westeros.org/index.php/House_Baratheon", descr: "Casata del re Robert. Stemma: cervo." },
+    { id: "targaryen", tipo: "casata", nome: "Casa Targaryen", en: "House Targaryen", wiki: "https://awoiaf.westeros.org/index.php/House_Targaryen", descr: "Antica casa reale di origine valyriana, deposta da Robert." },
+    { id: "tully", tipo: "casata", nome: "Casa Tully", en: "House Tully", wiki: "https://awoiaf.westeros.org/index.php/House_Tully", descr: "Casa di Delta delle Acque, che segue la Fede dei Sette. Casata di Catelyn e Lysa." },
+    { id: "arryn", tipo: "casata", nome: "Casa Arryn", en: "House Arryn", wiki: "https://awoiaf.westeros.org/index.php/House_Arryn", descr: "Casa del Nido dell'Aquila, tradizionalmente Guardiana dell'Est." },
+    { id: "greyjoy", tipo: "casata", nome: "Casa Greyjoy", en: "House Greyjoy", wiki: "https://awoiaf.westeros.org/index.php/House_Greyjoy", descr: "Casata delle Isole di Ferro; Theon è pupillo di Eddard." },
+    { id: "mormont", tipo: "casata", nome: "Casa Mormont", en: "House Mormont", wiki: "https://awoiaf.westeros.org/index.php/House_Mormont", descr: "Casata del Nord cui appartiene ser Jorah." },
+    { id: "tyrell", tipo: "casata", nome: "Casa Tyrell", en: "House Tyrell", wiki: "https://awoiaf.westeros.org/index.php/House_Tyrell", descr: "Casata dell'Altopiano; Viserys la conta tra i possibili alleati." },
+    { id: "redwyne", tipo: "casata", nome: "Casa Redwyne", en: "House Redwyne", wiki: "https://awoiaf.westeros.org/index.php/House_Redwyne", descr: "Casata dell'Altopiano; possibile alleato secondo Viserys." },
+    { id: "darry", tipo: "casata", nome: "Casa Darry", en: "House Darry", wiki: "https://awoiaf.westeros.org/index.php/House_Darry", descr: "Casata delle Terre dei Fiumi; possibile alleata secondo Viserys." },
+    /* ---- Popoli e fazioni ---- */
+    { id: "guardia_notte", tipo: "popolo", nome: "Guardia della Notte", en: "Night's Watch", wiki: "https://awoiaf.westeros.org/index.php/Night%27s_Watch", descr: "Ordine militare che difende la Barriera; i suoi membri vestono di nero. Ridotta a meno di mille uomini." },
+    { id: "bruti", tipo: "popolo", nome: "Bruti", en: "Wildlings", wiki: "https://awoiaf.westeros.org/index.php/Wildling", descr: "Popolazioni libere che vivono a nord della Barriera." },
+    { id: "estranei", tipo: "popolo", nome: "Gli Estranei", en: "The Others", wiki: "https://awoiaf.westeros.org/index.php/Others", descr: "Creature alte e pallide, di cristallo gelido: appaiono nel Prologo." },
+    { id: "primi_uomini", tipo: "popolo", nome: "I Primi Uomini", en: "First Men", wiki: "https://awoiaf.westeros.org/index.php/First_Men", descr: "Antico popolo da cui discendono gli Stark; credevano che chi condanna debba anche eseguire." },
+    { id: "dothraki", tipo: "popolo", nome: "Dothraki", en: "Dothraki", wiki: "https://awoiaf.westeros.org/index.php/Dothraki", descr: "Popolo di cavalieri nomadi di Essos, organizzati in khalasar sotto un khal." },
+    { id: "valyriani", tipo: "popolo", nome: "Valyriani", en: "Valyrians", wiki: "https://awoiaf.westeros.org/index.php/Valyria", descr: "Antica nobiltà dai capelli argento-oro e occhi viola, da cui discendono i Targaryen." },
+    { id: "dorniani", tipo: "popolo", nome: "Dorniani", en: "Dornishmen", wiki: "https://awoiaf.westeros.org/index.php/Dornishmen", descr: "Abitanti di Dorne, nel sud di Westeros." },
+    { id: "guardia_reale", tipo: "popolo", nome: "Guardia Reale", en: "Kingsguard", wiki: "https://awoiaf.westeros.org/index.php/Kingsguard", descr: "Ordine dei sette cavalieri che proteggono il re." },
+    /* ---- Termini, oggetti, epoche ---- */
+    { id: "ghiaccio", tipo: "termine", nome: "Ghiaccio", en: "Ice", wiki: "https://awoiaf.westeros.org/index.php/Ice", descr: "Spada ancestrale degli Stark, di acciaio di Valyria." },
+    { id: "metalupo", tipo: "termine", nome: "Metalupo", en: "Direwolf", wiki: "https://awoiaf.westeros.org/index.php/Direwolf", descr: "Grande lupo, stemma della Casa Stark; non se ne vedeva uno a sud della Barriera da duecento anni." },
+    { id: "acciaio_valyria", tipo: "termine", nome: "Acciaio di Valyria", en: "Valyrian steel", wiki: "https://awoiaf.westeros.org/index.php/Valyrian_steel", descr: "Metallo pregiato con cui sono forgiate le spade più rare." },
+    { id: "albero_cuore", tipo: "termine", nome: "Albero-cuore", en: "Heart tree", wiki: "https://awoiaf.westeros.org/index.php/Heart_tree", descr: "L'albero sacro al centro del parco degli dei." },
+    { id: "vecchi_dei", tipo: "termine", nome: "I Vecchi Dei", en: "Old Gods", wiki: "https://awoiaf.westeros.org/index.php/Old_Gods", descr: "Religione dei Primi Uomini, seguita dagli Stark." },
+    { id: "fede_sette", tipo: "termine", nome: "La Fede dei Sette", en: "Faith of the Seven", wiki: "https://awoiaf.westeros.org/index.php/Faith_of_the_Seven", descr: "Religione seguita da Casa Tully e da gran parte del regno." },
+    { id: "khalasar", tipo: "termine", nome: "Khalasar", en: "Khalasar", wiki: "https://awoiaf.westeros.org/index.php/Khalasar", descr: "Orda dothraki guidata da un khal." },
+    { id: "magister", tipo: "termine", nome: "Magister", en: "Magister", wiki: "https://awoiaf.westeros.org/index.php/Magister", descr: "Titolo dei governanti delle città libere come Pentos." },
+    { id: "primo_cavaliere", tipo: "termine", nome: "Primo Cavaliere del Re", en: "Hand of the King", wiki: "https://awoiaf.westeros.org/index.php/Hand_of_the_King", descr: "Secondo uomo più potente del regno, che governa in nome del re." },
+    { id: "guardiano_est", tipo: "termine", nome: "Guardiano dell'Est", en: "Warden of the East", wiki: "https://awoiaf.westeros.org/index.php/Warden_of_the_East", descr: "Titolo tradizionalmente legato ai domini di Casa Arryn." },
+    { id: "bastardo", tipo: "termine", nome: "Bastardo", en: "Bastard", descr: "Figlio nato fuori dal matrimonio; per Jon ciò significa esclusione dal tavolo principale e dal futuro." },
+    { id: "ribellione_robert", tipo: "epoca", nome: "Ribellione di Robert", en: "Robert's Rebellion", wiki: "https://awoiaf.westeros.org/index.php/Robert%27s_Rebellion", descr: "La guerra con cui Robert Baratheon rovesciò i Targaryen e prese il Trono di Spade." },
+    { id: "saccheggio_approdo", tipo: "epoca", nome: "Saccheggio di Approdo del Re", en: "Sack of King's Landing", wiki: "https://awoiaf.westeros.org/index.php/Sack_of_King%27s_Landing", descr: "La presa della capitale al termine della ribellione; vi morirono il principe Aegon e re Aerys." },
+    { id: "ribellione_greyjoy", tipo: "epoca", nome: "Ribellione di Greyjoy", en: "Greyjoy Rebellion", wiki: "https://awoiaf.westeros.org/index.php/Greyjoy_Rebellion", descr: "Rivolta delle Isole di Ferro; l'ultima volta che Eddard vide Robert, nove anni prima." }
+  ]
+});
 
-    updatePovFilter();
-    renderChaptersList();
-    renderChapterDetail();
-  </script>
+</script>
+<script>
+/* Mondo Disco — dati (bozza: struttura di Il Colore della Magia).
+   Le sinossi sono volutamente brevi e marcate «da approfondire»: nella prossima sessione
+   le sostituiamo con riassunti dettagliati, sezione per sezione, man mano che leggi. */
+(window.ARCHIVIO = window.ARCHIVIO || []).push({
+  id: "pratchett",
+  nome: "Mondo Disco",
+  nomeEn: "Discworld",
+  autore: "Terry Pratchett",
+  fonte: {
+    nome: "Discworld Wiki / L-Space Web",
+    url: "https://discworld.fandom.com/wiki/The_Colour_of_Magic",
+    licenza: "verificare la licenza della singola pagina",
+    ricerca: "https://discworld.fandom.com/wiki/Special:Search?query="
+  },
+  libri: [
+    {
+      id: "com",
+      titolo: "Il Colore della Magia",
+      titoloEn: "The Colour of Magic",
+      anno: 1983,
+      totaleCapitoli: 6,
+      capitoli: [
+        {
+          n: 0, titolo: "Prologo — Il Colore della Magia", titoloEn: "The Colour of Magic — Prologue", pov: "Narratore", luogo: "Il Disco, nello spazio", pagina: "",
+          url: "https://discworld.fandom.com/wiki/The_Colour_of_Magic",
+          stato: "sintetica",
+          breve: "Il Disco viaggia nello spazio sul dorso di quattro elefanti, a loro volta in piedi sulla grande tartaruga Great A'Tuin.",
+          sinossi: [
+            "Una gigantesca tartaruga cosmica, Great A'Tuin, nuota nello spazio portando sul dorso il Mondo Disco. Il Disco poggia sulla schiena di quattro enormi elefanti, i quali stanno in piedi sul carapace della tartaruga."
+          ],
+          note: "Apertura cosmica che stabilisce la geografia del Mondo Disco.",
+          presenti: ["great_atuin"], menzionati: [], luoghi: ["mondo_disco"], casate: [], popoli: [], termini: []
+        },
+        {
+          n: 1, titolo: "Il Colore della Magia", titoloEn: "The Colour of Magic", pov: "Rincewind / Narratore", luogo: "Ankh-Morpork", pagina: "",
+          url: "https://discworld.fandom.com/wiki/The_Colour_of_Magic",
+          stato: "sintetica",
+          breve: "Il mago incapace Rincewind incontra il turista Duefiori; Ankh-Morpork brucia e i due fuggono.",
+          sinossi: [
+            "Ankh-Morpork sta bruciando. Bravd l'Hublander e il suo amico il Donnola osservano il fumo salire da una collina. Il mago Rincewind incontra Duefiori, un ispettore assicurativo dell'Impero Agateano, quando questi entra in una locanda sul lungomare, il Tamburo Rotto. La promessa dell'oro vince il buon senso di Rincewind, che attacca discorso con lui. Duefiori viaggia con il Bagaglio, un baule che si sposta su centinaia di piccole gambe.",
+            "Rincewind e Duefiori fuggono da Ankh-Morpork mentre la città brucia (un disastro che è solo marginalmente colpa loro) e il viaggio turistico nel Disco continua."
+          ],
+          note: "Prima sezione: parodia del turismo e del fantasy «spada e magia» (Bravd e il Donnola richiamano Fafhrd e il Gray Mouser di Fritz Leiber).",
+          presenti: ["rincewind", "duefiori", "bagaglio", "bravd", "donnola"],
+          menzionati: [], luoghi: ["ankh_morpork"], casate: [], popoli: [], termini: ["ottarino"]
+        },
+        {
+          n: 2, titolo: "Prologo — L'Invio degli Otto", titoloEn: "The Sending of Eight — Prologue", pov: "Narratore", luogo: "Il Disco", pagina: "",
+          url: "https://discworld.fandom.com/wiki/The_Colour_of_Magic",
+          stato: "da_scrivere",
+          breve: "Da approfondire.",
+          sinossi: ["Sinossi da inserire. Questa sezione precede il racconto «L'Invio degli Otto» ed è da compilare dalle fonti."],
+          note: "", presenti: [], menzionati: [], luoghi: [], casate: [], popoli: [], termini: []
+        },
+        {
+          n: 3, titolo: "L'Invio degli Otto", titoloEn: "The Sending of Eight", pov: "Rincewind / Narratore", luogo: "Strada per Quirm", pagina: "",
+          url: "https://discworld.fandom.com/wiki/The_Colour_of_Magic",
+          stato: "sintetica",
+          breve: "Rincewind e Duefiori sono a metà strada verso Quirm; compare Bel-Shamharoth, il Mangiatore di Anime.",
+          sinossi: [
+            "Rincewind e Duefiori sono a metà strada verso Quirm. Rincewind ha finito per affezionarsi un po' a Duefiori. I due discutono di quanto sia poco pratico, in realtà, il sistema della magia, e questo deprime Duefiori, che aveva sperato fosse fantastico come l'aveva immaginato. A un certo punto Rincewind urta Duefiori pregandolo di non pronunciare il numero otto, sfortunato nel Mondo Disco e legato a Bel-Shamharoth, il Mangiatore di Anime.",
+            "Secondo le fonti, le loro avventure sul cammino sono in realtà il soggetto di un gioco da tavolo giocato dagli dèi del Disco."
+          ],
+          note: "Questa sezione è, in parte, una parodia del genere horror lovecraftiano (Bel-Shamharoth ricorda le creature del Ciclo di Cthulhu).",
+          presenti: ["rincewind", "duefiori", "bagaglio", "bel_shamharoth"],
+          menzionati: ["dei"], luoghi: ["quirm"], casate: [], popoli: [], termini: ["ottarino"]
+        },
+        {
+          n: 4, titolo: "L'Attrazione del Wyrm", titoloEn: "The Lure of the Wyrm", pov: "Rincewind / Narratore", luogo: "Wyrmberg", pagina: "",
+          url: "https://discworld.fandom.com/wiki/The_Colour_of_Magic",
+          stato: "sintetica",
+          breve: "I due arrivano al Wyrmberg, dove vivono draghi che esistono solo se ci si crede.",
+          sinossi: [
+            "Rincewind e Duefiori incontrano il Wyrmberg: un luogo di draghi che esistono soltanto se qualcuno ci crede, come dice la presentazione dell'editore. Da lì la fuga li porterà a proseguire il viaggio attraverso il Disco."
+          ],
+          note: "Sinossi da approfondire con i dettagli di personaggi e luoghi.",
+          presenti: ["rincewind", "duefiori", "bagaglio"], menzionati: [], luoghi: ["wyrmberg"], casate: [], popoli: [], termini: []
+        },
+        {
+          n: 5, titolo: "Vicino al Bordo", titoloEn: "Close to the Edge", pov: "Rincewind / Narratore", luogo: "Il Bordo del Disco (Rimfall)", pagina: "",
+          url: "https://discworld.fandom.com/wiki/The_Colour_of_Magic",
+          stato: "sintetica",
+          breve: "Rincewind e Duefiori raggiungono il Bordo, dove gli oceani precipitano nel vuoto.",
+          sinossi: [
+            "Rincewind e Duefiori raggiungono il Bordo del Disco, la gigantesca cascata (il Rimfall) in cui gli oceani precipitano nel vuoto. Dopo un incontro sconcertante con gli esseri che hanno creato il Disco, vengono riportati su di esso."
+          ],
+          note: "Sinossi da approfondire; sezione finale del romanzo.",
+          presenti: ["rincewind", "duefiori", "bagaglio"], menzionati: [], luoghi: ["rimfall"], casate: [], popoli: [], termini: []
+        }
+      ]
+    }
+  ],
+  entita: [
+    { id: "rincewind", tipo: "personaggio", nome: "Rincewind", en: "Rincewind", descr: "Mago avaro e incapace, protagonista della serie di Rincewind." },
+    { id: "duefiori", tipo: "personaggio", nome: "Duefiori", en: "Twoflower", descr: "Ingenuo turista, ispettore assicurativo dell'Impero Agateano, primo turista del Mondo Disco." },
+    { id: "bagaglio", tipo: "personaggio", nome: "Il Bagaglio", en: "The Luggage", descr: "Baule di Duefiori che si sposta su centinaia di piccole gambe." },
+    { id: "bravd", tipo: "personaggio", nome: "Bravd l'Hublander", en: "Bravd", descr: "Eroe barbaro che assiste con il Donnola all'incendio di Ankh-Morpork; richiama Fafhrd di Fritz Leiber." },
+    { id: "donnola", tipo: "personaggio", nome: "Il Donnola", en: "The Weasel", descr: "Amico di Bravd; richiama il Gray Mouser di Fritz Leiber." },
+    { id: "bel_shamharoth", tipo: "personaggio", nome: "Bel-Shamharoth", en: "Bel-Shamharoth", descr: "Il Mangiatore di Anime, parodia delle abominazioni lovecraftiane; legato al numero otto." },
+    { id: "great_atuin", tipo: "personaggio", nome: "Great A'Tuin", en: "Great A'Tuin", descr: "La tartaruga cosmica che porta il Disco sul dorso." },
+    { id: "dei", tipo: "popolo", nome: "Gli dèi del Disco", en: "The Gods of the Discworld", descr: "Divinità che, secondo le fonti, giocano a un gioco da tavolo con le sorti dei protagonisti." },
+    { id: "mondo_disco", tipo: "luogo", nome: "Il Mondo Disco", en: "Discworld", descr: "Pianeta piatto portato da quattro elefanti sul dorso di Great A'Tuin." },
+    { id: "ankh_morpork", tipo: "luogo", nome: "Ankh-Morpork", en: "Ankh-Morpork", descr: "La più grande città del Mondo Disco." },
+    { id: "quirm", tipo: "luogo", nome: "Quirm", en: "Quirm", descr: "Città verso cui sono diretti Rincewind e Duefiori nel secondo racconto." },
+    { id: "wyrmberg", tipo: "luogo", nome: "Il Wyrmberg", en: "The Wyrmberg", descr: "Montagna dei draghi, che esistono soltanto se ci si crede." },
+    { id: "rimfall", tipo: "luogo", nome: "Il Rimfall", en: "The Rimfall", descr: "Cascata colossale in cui gli oceani del Disco precipitano nel vuoto." },
+    { id: "ottarino", tipo: "termine", nome: "Ottarino", en: "Octarine", descr: "L'ottavo colore dello spettro del Mondo Disco, il «colore re» della magia, visibile solo a maghi e gatti." }
+  ]
+});
+
+</script>
+<script>
+(function(){
+  "use strict";
+  var DATA = window.ARCHIVIO || [];
+  var TIPI = {personaggio:"Personaggi", luogo:"Luoghi e città", casata:"Casate", popolo:"Popoli e fazioni", termine:"Termini e oggetti", epoca:"Epoche ed eventi"};
+  var TIPI_SING = {personaggio:"Personaggio", luogo:"Luogo", casata:"Casata", popolo:"Popolo / fazione", termine:"Termine", epoca:"Epoca / evento"};
+  var CAMPI = [["presenti","Presenti"],["menzionati","Menzionati"],["luoghi","Luoghi"],["casate","Casate"],["popoli","Popoli e fazioni"],["termini","Termini e oggetti"]];
+  var CHIAVE = "archivio_saghe_v1";
+  var st = {saga:0, libro:0, vista:"capitoli", cap:null, ent:null, tipo:"tutti", q:"", anti:false, letto:{}, tema:"chiaro"};
+
+  /* ---------- memoria locale (con protezione) ---------- */
+  function salva(){ try{ localStorage.setItem(CHIAVE, JSON.stringify({anti:st.anti, letto:st.letto, tema:st.tema, saga:st.saga, libro:st.libro})); }catch(e){} }
+  function carica(){
+    try{
+      var s = JSON.parse(localStorage.getItem(CHIAVE)||"null");
+      if(s){ st.anti=!!s.anti; st.letto=s.letto||{}; st.tema=s.tema||"chiaro"; st.saga=Math.min(s.saga||0, DATA.length-1); st.libro=s.libro||0; }
+    }catch(e){}
+  }
+
+  /* ---------- utilità ---------- */
+  function esc(t){ return String(t==null?"":t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function saga(){ return DATA[st.saga]; }
+  function libro(){ var s=saga(); return s.libri[Math.min(st.libro, s.libri.length-1)]; }
+  function lettoFino(b){ var v = st.letto[saga().id+"/"+b.id]; return (v===undefined||v===null) ? -1 : v; }
+  function visibile(b,c){ return !st.anti || c.n <= lettoFino(b); }
+  function entita(id){ var e = saga().entita.filter(function(x){return x.id===id;})[0]; return e; }
+  function linkWiki(e){ return e.wiki || null; }
+  function linkCerca(e){ return saga().fonte.ricerca + encodeURIComponent(e.en||e.nome); }
+  function norm(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+
+  /* apparizioni di un'entità nei capitoli visibili di tutti i libri della saga */
+  function apparizioni(id){
+    var out=[];
+    saga().libri.forEach(function(b){
+      b.capitoli.forEach(function(c){
+        if(!visibile(b,c)) return;
+        var ruoli=[];
+        CAMPI.forEach(function(k){ if((c[k[0]]||[]).indexOf(id)>=0) ruoli.push(k[1]); });
+        if(ruoli.length) out.push({libro:b, cap:c, ruoli:ruoli});
+      });
+    });
+    return out;
+  }
+  function entitaVisibili(){
+    var tutte = saga().entita;
+    if(!st.anti) return tutte;
+    return tutte.filter(function(e){ return apparizioni(e.id).length>0; });
+  }
+
+  /* ---------- intestazione ---------- */
+  function iniziaIntestazione(){
+    var sg=document.getElementById("selSaga");
+    sg.innerHTML = DATA.map(function(s,i){return '<option value="'+i+'">'+esc(s.nome)+'</option>';}).join("");
+    sg.value = st.saga;
+    aggiornaSelLibro();
+    document.getElementById("chkAnti").checked = st.anti;
+    document.documentElement.setAttribute("data-tema", st.tema==="scuro"?"scuro":"chiaro");
+  }
+  function aggiornaSelLibro(){
+    var sl=document.getElementById("selLibro");
+    sl.innerHTML = saga().libri.map(function(b,i){return '<option value="'+i+'">'+esc(b.titolo)+' ('+esc(b.titoloEn)+')</option>';}).join("");
+    st.libro = Math.min(st.libro, saga().libri.length-1);
+    sl.value = st.libro;
+  }
+  function aggiornaLetto(){
+    var box=document.getElementById("boxLetto"), sel=document.getElementById("selLetto"), msg=document.getElementById("msgSpoiler");
+    box.style.display = st.anti ? "inline" : "none";
+    var b=libro();
+    var opz='<option value="-1">Nessun capitolo</option>' + b.capitoli.map(function(c){return '<option value="'+c.n+'">'+esc(c.titolo)+'</option>';}).join("");
+    sel.innerHTML=opz; sel.value=String(lettoFino(b));
+    msg.textContent = st.anti ? "Mostro solo ciò che hai già letto." : "Tutti i capitoli sono visibili (anche gli spoiler).";
+  }
+
+  /* ---------- vista capitoli ---------- */
+  function listaCapitoli(){
+    var b=libro(), h='', q=norm(st.q);
+    var mancanti = b.totaleCapitoli - b.capitoli.length;
+    b.capitoli.forEach(function(c){
+      if(q && norm(c.titolo+" "+c.pov+" "+c.luogo+" "+(c.sinossi||[]).join(" ")).indexOf(q)<0) return;
+      var ok=visibile(b,c);
+      h+='<button class="voce '+(st.cap===c.n&&ok?'sel':'')+(ok?'':' bloccata')+'" data-cap="'+c.n+'" '+(ok?'':'disabled')+'>'+
+         '<span class="n">'+(c.n===0?'Prologo':'Capitolo '+c.n)+(ok?'':' · 🔒 non ancora letto')+'</span>'+
+         '<span class="t">'+esc(c.titolo)+'</span>'+
+         '<span class="p">'+(ok?esc(c.pov):'')+'</span></button>';
+    });
+    if(!h) h='<div class="nota-aside">Nessun capitolo trovato.</div>';
+    if(mancanti>0 && !q) h+='<div class="nota-aside">Ne mancano '+mancanti+': li aggiungiamo man mano che leggi.</div>';
+    return h;
+  }
+  function chipGruppo(titolo, ids){
+    if(!ids||!ids.length) return '';
+    var voci = ids.map(function(id){var e=entita(id); return e?'<span class="chip" data-ent="'+esc(id)+'">'+esc(e.nome)+'</span>':'';}).join("");
+    return '<div class="gruppo"><h3>'+esc(titolo)+'</h3><div class="chips">'+voci+'</div></div>';
+  }
+  function htmlCapitolo(b,c,conAzioni){
+    var h='';
+    if(conAzioni){
+      h+='<div class="azioni no-stampa"><button class="btn" data-az="stampa">🖨️ Stampa / PDF questo capitolo</button><button class="btn" data-az="stampa-libro">🖨️ Stampa il libro (capitoli visibili)</button>'+
+         (c.url?'<a class="btn" style="text-decoration:none" target="_blank" rel="noopener" href="'+esc(c.url)+'">Apri la fonte ↗</a>':'')+'</div>';
+    }
+    h+='<h2 class="cap">'+esc(c.titolo)+(c.stato==="sintetica"?'<span class="badge">sinossi da approfondire</span>':'')+(c.stato==="da_scrivere"?'<span class="badge">da scrivere</span>':'')+'</h2>';
+    if(c.titoloEn) h+='<div class="meta"><span>'+esc(c.titoloEn)+'</span></div>';
+    h+='<div class="meta"><span><b>'+esc(b.titolo)+'</b> · '+(c.n===0?'Prologo':'Capitolo '+c.n)+'</span>'+
+       (c.pov?'<span>Punto di vista: <b>'+esc(c.pov)+'</b></span>':'')+
+       (c.luogo?'<span>Luogo: '+esc(c.luogo)+'</span>':'')+
+       (c.pagina?'<span>Pagina: '+esc(c.pagina)+'</span>':'')+'</div>';
+    if(c.breve) h+='<p class="breve">'+esc(c.breve)+'</p>';
+    h+='<div class="sinossi">'+(c.sinossi||[]).map(function(p){return '<p>'+esc(p)+'</p>';}).join("")+'</div>';
+    if(c.note) h+='<div class="nota"><b>Da tenere a mente.</b> '+esc(c.note)+'</div>';
+    CAMPI.forEach(function(k){ h+=chipGruppo(k[1], c[k[0]]); });
+    var f=saga().fonte;
+    h+='<div class="fonte">Fonte: <a href="'+esc(f.url)+'" target="_blank" rel="noopener">'+esc(f.nome)+'</a> ('+esc(f.licenza)+'). Sinossi tradotta e rielaborata in italiano.</div>';
+    return h;
+  }
+  function pannelloCapitoli(){
+    var b=libro(), c = b.capitoli.filter(function(x){return x.n===st.cap;})[0];
+    if(!c || !visibile(b,c)){
+      var vis=b.capitoli.filter(function(x){return visibile(b,x);});
+      if(!vis.length) return '<div class="vuoto">Nessun capitolo visibile. Con la modalità anti-spoiler attiva, scegli «Letto fino a» in alto.</div>';
+      return '<h2 class="cap">'+esc(b.titolo)+'</h2><div class="meta"><span>'+esc(b.titoloEn)+' · '+esc(saga().autore)+' · '+b.anno+'</span></div>'+
+        '<div class="azioni no-stampa"><button class="btn" data-az="stampa-libro">🖨️ Stampa il libro (capitoli visibili)</button></div>'+
+        '<p>Scegli un capitolo dall\'elenco. Capitoli inseriti: <b>'+b.capitoli.length+'</b> su '+b.totaleCapitoli+'.</p>'+
+        '<ul class="elenco-cap">'+vis.map(function(x){return '<li><a href="#" data-cap="'+x.n+'"><b>'+esc(x.titolo)+'</b></a> — '+esc(x.breve||"")+'</li>';}).join("")+'</ul>';
+    }
+    return htmlCapitolo(b,c,true);
+  }
+
+  /* ---------- vista database ---------- */
+  function listaFiltri(){
+    var vis=entitaVisibili(), cont={};
+    vis.forEach(function(e){cont[e.tipo]=(cont[e.tipo]||0)+1;});
+    var h='<div class="nota-aside"><b>Tipo di voce</b></div>';
+    h+='<button class="voce '+(st.tipo==="tutti"?'sel':'')+'" data-tipo="tutti"><span class="t">Tutte</span> <span class="p">('+vis.length+')</span></button>';
+    Object.keys(TIPI).forEach(function(t){
+      if(!cont[t]) return;
+      h+='<button class="voce '+(st.tipo===t?'sel':'')+'" data-tipo="'+t+'"><span class="t">'+TIPI[t]+'</span> <span class="p">('+cont[t]+')</span></button>';
+    });
+    return h;
+  }
+  function pannelloDatabase(){
+    if(st.ent){ var e=entita(st.ent); if(e) return schedaEntita(e); }
+    var vis=entitaVisibili(), q=norm(st.q);
+    vis = vis.filter(function(e){
+      if(st.tipo!=="tutti" && e.tipo!==st.tipo) return false;
+      if(q && norm(e.nome+" "+(e.en||"")+" "+(e.alias||[]).join(" ")+" "+(e.descr||"")).indexOf(q)<0) return false;
+      return true;
+    }).sort(function(a,b){return a.nome.localeCompare(b.nome,"it");});
+    var h='<h2 class="cap">Database — '+esc(saga().nome)+'</h2><div class="meta"><span>'+vis.length+' voci</span>'+(st.anti?'<span>Solo voci già incontrate nei capitoli letti</span>':'')+'</div>';
+    if(!vis.length) return h+'<div class="vuoto">Nessuna voce trovata.</div>';
+    h+='<div class="griglia">'+vis.map(function(e){
+      return '<div class="scheda" data-ent="'+esc(e.id)+'"><div class="tp">'+TIPI_SING[e.tipo]+'</div><div class="nm">'+esc(e.nome)+'</div><div class="en">'+esc(e.en||"")+'</div></div>';
+    }).join("")+'</div>';
+    return h;
+  }
+  function schedaEntita(e){
+    var ap=apparizioni(e.id);
+    var h='<div class="azioni no-stampa"><button class="btn" data-az="indietro">← Torna all\'elenco</button><button class="btn" data-az="stampa">🖨️ Stampa questa scheda</button></div>';
+    h+='<div class="meta"><span>'+TIPI_SING[e.tipo]+'</span></div><h2 class="cap">'+esc(e.nome)+'</h2>';
+    if(e.en) h+='<div class="meta"><span>'+esc(e.en)+'</span>'+(e.alias&&e.alias.length?'<span>Detto anche: '+esc(e.alias.join(", "))+'</span>':'')+'</div>';
+    h+='<p>'+esc(e.descr||"")+'</p>';
+    h+='<div class="azioni no-stampa">'+
+       (linkWiki(e)?'<a class="btn" style="text-decoration:none" target="_blank" rel="noopener" href="'+esc(linkWiki(e))+'">Pagina sul wiki ↗</a>':'')+
+       '<a class="btn" style="text-decoration:none" target="_blank" rel="noopener" href="'+esc(linkCerca(e))+'">Cerca sul wiki ↗</a></div>';
+    h+='<div class="gruppo"><h3>Compare in</h3>';
+    if(!ap.length) h+='<div class="vuoto">Non ancora nei capitoli inseriti.</div>';
+    else h+='<ul class="elenco-cap">'+ap.map(function(a){return '<li><a href="#" data-lib="'+esc(a.libro.id)+'" data-cap="'+a.cap.n+'"><b>'+esc(a.libro.titolo)+' — '+esc(a.cap.titolo)+'</b></a> <span style="color:var(--tenue);font-family:var(--sans);font-size:.8rem">('+esc(a.ruoli.join(", ").toLowerCase())+')</span></li>';}).join("")+'</ul>';
+    h+='</div>';
+    h+='<div class="fonte">Scheda sintetica, senza anticipazioni oltre i capitoli inseriti. Dettagli completi sul wiki: <a href="'+esc(saga().fonte.url)+'" target="_blank" rel="noopener">'+esc(saga().fonte.nome)+'</a>.</div>';
+    return h;
+  }
+
+  /* ---------- vista info ---------- */
+  function pannelloInfo(){
+    var s=saga(), f=s.fonte;
+    var h='<h2 class="cap">Info e fonti</h2>';
+    h+='<p>Archivio personale di riassunti capitolo per capitolo e di schede (personaggi, luoghi, casate, popoli, termini, epoche), con collegamenti incrociati tra capitoli e voci.</p>';
+    h+='<div class="gruppo"><h3>Saga corrente</h3><p><b>'+esc(s.nome)+'</b> ('+esc(s.nomeEn)+') — '+esc(s.autore)+'<br>Fonte principale: <a href="'+esc(f.url)+'" target="_blank" rel="noopener">'+esc(f.nome)+'</a>. Licenza: '+esc(f.licenza)+'.</p></div>';
+    h+='<div class="gruppo"><h3>Libri nell\'archivio</h3><ul class="elenco-cap">'+s.libri.map(function(b){return '<li><b>'+esc(b.titolo)+'</b> ('+esc(b.titoloEn)+', '+b.anno+') — '+b.capitoli.length+' capitoli inseriti su '+b.totaleCapitoli+'</li>';}).join("")+'</ul></div>';
+    h+='<div class="gruppo"><h3>Come si usa</h3><ul class="elenco-cap"><li>Scegli saga e libro in alto, poi un capitolo a sinistra.</li><li>Tocca un nome nei gruppi sotto il riassunto per aprire la scheda.</li><li>Con «Modalità anti-spoiler» vedi solo i capitoli fino a quello che hai letto, e solo le voci già incontrate.</li><li>«Stampa» produce una pagina pulita; da lì puoi salvare in PDF.</li></ul></div>';
+    h+='<div class="fonte">Le sinossi sono traduzioni e rielaborazioni in italiano di testi del wiki citato e sono distribuite con la stessa licenza. Il testo dei romanzi non è riprodotto. Il file contiene solo riassunti: i tuoi progressi di lettura sono salvati nel browser di questo dispositivo.</div>';
+    return h;
+  }
+
+  /* ---------- disegno ---------- */
+  function disegna(){
+    document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("on", t.getAttribute("data-vista")===st.vista); });
+    var lat=document.getElementById("laterale"), pan=document.getElementById("pannello");
+    aggiornaLetto();
+    if(st.vista==="capitoli"){ lat.style.display=""; lat.innerHTML=listaCapitoli(); pan.innerHTML=pannelloCapitoli(); }
+    else if(st.vista==="database"){ lat.style.display=""; lat.innerHTML=listaFiltri(); pan.innerHTML=pannelloDatabase(); }
+    else { lat.style.display="none"; pan.innerHTML=pannelloInfo(); }
+    document.querySelector("main").style.gridTemplateColumns = (st.vista==="info") ? "1fr" : "";
+  }
+
+  /* ---------- stampa ---------- */
+  function stampaLibro(){
+    var b=libro(), area=document.getElementById("areaStampa");
+    var h='<h1 style="font-size:1.8rem;margin:0 0 4px">'+esc(b.titolo)+'</h1><div class="meta"><span>'+esc(b.titoloEn)+' · '+esc(saga().autore)+' · '+b.anno+'</span></div>';
+    b.capitoli.filter(function(c){return visibile(b,c);}).forEach(function(c){ h+='<div class="capitolo-stampa">'+htmlCapitolo(b,c,false)+'</div>'; });
+    area.innerHTML=h;
+    document.body.classList.add("stampa-libro");
+    var fine=function(){ document.body.classList.remove("stampa-libro"); area.innerHTML=""; window.removeEventListener("afterprint",fine); };
+    window.addEventListener("afterprint",fine);
+    setTimeout(function(){ window.print(); },60);
+  }
+
+  /* ---------- eventi ---------- */
+  document.addEventListener("click",function(ev){
+    var t=ev.target;
+    var tab=t.closest(".tab");
+    if(tab){ st.vista=tab.getAttribute("data-vista"); st.ent=null; disegna(); return; }
+    var az=t.closest("[data-az]");
+    if(az){
+      var a=az.getAttribute("data-az");
+      if(a==="stampa") window.print();
+      else if(a==="stampa-libro") stampaLibro();
+      else if(a==="indietro"){ st.ent=null; disegna(); }
+      return;
+    }
+    var ent=t.closest("[data-ent]");
+    if(ent){ st.vista="database"; st.ent=ent.getAttribute("data-ent"); disegna(); window.scrollTo(0,0); return; }
+    var tp=t.closest("[data-tipo]");
+    if(tp){ st.tipo=tp.getAttribute("data-tipo"); st.ent=null; disegna(); return; }
+    var cp=t.closest("[data-cap]");
+    if(cp && !cp.disabled){
+      ev.preventDefault();
+      var lib=cp.getAttribute("data-lib");
+      if(lib){ var i=saga().libri.map(function(b){return b.id;}).indexOf(lib); if(i>=0){ st.libro=i; document.getElementById("selLibro").value=i; } }
+      st.vista="capitoli"; st.cap=parseInt(cp.getAttribute("data-cap"),10); disegna(); window.scrollTo(0,0); return;
+    }
+  });
+  document.getElementById("selSaga").addEventListener("change",function(e){ st.saga=+e.target.value; st.libro=0; st.cap=null; st.ent=null; aggiornaSelLibro(); salva(); disegna(); });
+  document.getElementById("selLibro").addEventListener("change",function(e){ st.libro=+e.target.value; st.cap=null; salva(); disegna(); });
+  document.getElementById("cerca").addEventListener("input",function(e){ st.q=e.target.value; st.ent=null; disegna(); });
+  document.getElementById("chkAnti").addEventListener("change",function(e){ st.anti=e.target.checked; salva(); disegna(); });
+  document.getElementById("selLetto").addEventListener("change",function(e){ st.letto[saga().id+"/"+libro().id]=parseInt(e.target.value,10); salva(); disegna(); });
+  document.getElementById("btnTema").addEventListener("click",function(){ st.tema = st.tema==="scuro"?"chiaro":"scuro"; document.documentElement.setAttribute("data-tema", st.tema); salva(); });
+
+  /* ---------- avvio ---------- */
+  if(!DATA.length){ document.getElementById("pannello").innerHTML='<div class="vuoto">Nessun dato trovato: controlla che la cartella «dati» sia accanto a index.html.</div>'; return; }
+  carica(); iniziaIntestazione();
+  var b0=libro(); if(b0.capitoli.length) st.cap=null;
+  disegna();
+})();
+</script>
 </body>
 </html>
